@@ -1,9 +1,15 @@
-using UnityEngine;
+using LeglessDriving;
 
-public class GasPedal : MonoBehaviour, IInteractible
+public class GasPedal : BasePedal, IInteractible
 {
-    public void Interact()
+    public void Interact(bool hasBrick)
     {
-        Debug.Log("gas");
+        InteractWithBrick(hasBrick);
+        InteractWithNoBrick(hasBrick);
+    }
+
+    private void Update()
+    {
+        RotateToTarget();
     }
 }

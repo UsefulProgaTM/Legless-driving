@@ -8,6 +8,8 @@ public class InputManager : MonoBehaviour
 
     public event Action OnGoDown;
     public event Action OnGoUp;
+    public event Action OnInteract;
+
 
     private PlayerInputActions playerInputActions;
 
@@ -29,6 +31,12 @@ public class InputManager : MonoBehaviour
         playerInputActions.Player.Enable();
         playerInputActions.Player.GoDown.performed += GoDown_performed;
         playerInputActions.Player.GoUp.performed += GoUp_performed;
+        playerInputActions.Player.Interact.performed += Interact_performed;
+    }
+
+    private void Interact_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        OnInteract?.Invoke();
     }
 
     private void GoUp_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)

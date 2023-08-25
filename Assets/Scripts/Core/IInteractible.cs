@@ -1,4 +1,4 @@
 public interface IInteractible
 {
-    public void Interact();
+    public void Interact(bool hasBrick);
 }

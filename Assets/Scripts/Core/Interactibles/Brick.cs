@@ -1,14 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 namespace LeglessDriving
 {
     public class Brick : MonoBehaviour, IInteractible
     {
-        public void Interact()
+        [Inject]
+        private Player player;
+
+        [SerializeField]
+        private BasePedal pedal;
+
+        public void Interact(bool hasBrick)
         {
-            Debug.Log("Brick");
+            if (pedal != null)
+            {
+                pedal.InteractWithBrick(hasBrick);
+            }
+            else
+            {
+                player.PickupBrick();
+            }
+            gameObject.transform.parent.gameObject.SetActive(false);
         }
     }
 }

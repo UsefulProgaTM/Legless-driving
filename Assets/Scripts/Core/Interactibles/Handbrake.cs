@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace LeglessDriving
 {
     public class Handbrake : MonoBehaviour, IInteractible
     {
-        public void Interact()
+        public void Interact(bool hasBrick)
         {
             Debug.Log("Handbrake");
         }

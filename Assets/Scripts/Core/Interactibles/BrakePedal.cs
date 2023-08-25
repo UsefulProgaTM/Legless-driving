@@ -1,9 +1,18 @@
+using LeglessDriving;
 using UnityEngine;
+using LeglessDriving;
 
-public class BrakePedal : MonoBehaviour, IInteractible
+public class BrakePedal : BasePedal, IInteractible
 {
-    public void Interact()
+    public void Interact(bool hasBrick)
     {
-        Debug.Log("Brake");
+        InteractWithBrick(hasBrick);
+        InteractWithNoBrick(hasBrick);
+
+    }
+
+    private void Update()
+    {
+        RotateToTarget();
     }
 }

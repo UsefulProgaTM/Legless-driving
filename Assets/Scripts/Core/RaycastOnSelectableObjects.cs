@@ -10,10 +10,10 @@ public class RaycastOnSelectableObjects : MonoBehaviour, IRaycast
 
     private Vector2 rayDestination;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        GameObject[] temp = GameObject.FindGameObjectsWithTag(Tags.Tag.Outline.ToString());
+        GameObject[] temp = GameObject.FindGameObjectsWithTag(Tags.Tag.Outline.ToString()
+    );
         selectableObjectTransfrorms = new Transform[temp.Length];
         for (int i = 0; i < temp.Length; i++)
         {
@@ -22,7 +22,6 @@ public class RaycastOnSelectableObjects : MonoBehaviour, IRaycast
 
         rayDestination = Utility.GetCenteredScreenPosition();
     }
-
 
     private void FixedUpdate()
     {

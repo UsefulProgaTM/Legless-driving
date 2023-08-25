@@ -1,9 +1,17 @@
+using LeglessDriving;
 using UnityEngine;
+using LeglessDriving;
 
-public class ClutchPedal : MonoBehaviour, IInteractible
+public class ClutchPedal : BasePedal, IInteractible
 {
-    public void Interact()
+    public void Interact(bool hasBrick)
     {
-        Debug.Log("clutch");
+        InteractWithBrick(hasBrick);
+        InteractWithNoBrick(hasBrick);
+    }
+
+    private void Update()
+    {
+        RotateToTarget();
     }
 }
