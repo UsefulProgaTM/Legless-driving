@@ -43,7 +43,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""Look"",
@@ -53,6 +53,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""GoDown"",
+                    ""type"": ""Button"",
+                    ""id"": ""ae56b1bc-4adb-46ae-8542-3f5fb0866a46"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GoUp"",
+                    ""type"": ""Button"",
+                    ""id"": ""865c6f1a-516b-4e17-a999-c4d8e005022f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -132,6 +150,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7d383239-db82-4802-8487-062074636b62"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GoDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a5620a80-ae02-4780-b064-24dd3bf9eb9b"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GoUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -143,6 +183,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
         m_Player_Handbrake = m_Player.FindAction("Handbrake", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
+        m_Player_GoDown = m_Player.FindAction("GoDown", throwIfNotFound: true);
+        m_Player_GoUp = m_Player.FindAction("GoUp", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -207,6 +249,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Movement;
     private readonly InputAction m_Player_Handbrake;
     private readonly InputAction m_Player_Look;
+    private readonly InputAction m_Player_GoDown;
+    private readonly InputAction m_Player_GoUp;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -214,6 +258,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Movement => m_Wrapper.m_Player_Movement;
         public InputAction @Handbrake => m_Wrapper.m_Player_Handbrake;
         public InputAction @Look => m_Wrapper.m_Player_Look;
+        public InputAction @GoDown => m_Wrapper.m_Player_GoDown;
+        public InputAction @GoUp => m_Wrapper.m_Player_GoUp;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -232,6 +278,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
+            @GoDown.started += instance.OnGoDown;
+            @GoDown.performed += instance.OnGoDown;
+            @GoDown.canceled += instance.OnGoDown;
+            @GoUp.started += instance.OnGoUp;
+            @GoUp.performed += instance.OnGoUp;
+            @GoUp.canceled += instance.OnGoUp;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -245,6 +297,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
+            @GoDown.started -= instance.OnGoDown;
+            @GoDown.performed -= instance.OnGoDown;
+            @GoDown.canceled -= instance.OnGoDown;
+            @GoUp.started -= instance.OnGoUp;
+            @GoUp.performed -= instance.OnGoUp;
+            @GoUp.canceled -= instance.OnGoUp;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -267,5 +325,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnHandbrake(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
+        void OnGoDown(InputAction.CallbackContext context);
+        void OnGoUp(InputAction.CallbackContext context);
     }
 }

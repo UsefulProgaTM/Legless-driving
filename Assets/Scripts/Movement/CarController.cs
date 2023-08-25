@@ -1,20 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using LeglessDriving;
 using UnityEngine;
-using UnityEngine.Windows;
+using Zenject;
 
 public class CarController : MonoBehaviour
 {
     private IMovementInput input;
-   
-    private Rigidbody rb;
 
-    //use SO
     [SerializeField]
-    private float horsePower = 1500;
+    private CurrentCarStats currentCarStats;
     [SerializeField]
-    private float brakePower = 10000;
+    private CarStats carStats;
+
+    private Rigidbody rb;
 
     [SerializeField]
     private GameObject centerOfMass;
@@ -22,44 +19,26 @@ public class CarController : MonoBehaviour
 
     #region Wheel Colliders
     [SerializeField]
-    private WheelCollider _frontLeftWheelCollider;
-    [SerializeField]
-    private WheelCollider _frontRightWheelCollider;
-
-    [SerializeField]
-    private WheelCollider _rearLeftWheelCollider;
-    [SerializeField]
-    private WheelCollider _rearRightWheelCollider;
+    private WheelCollider[] _wheelColliders;
     #endregion
     private float maxSteerAngle = 35;
 
-    private Vector3 _lastPosition;
+    [Inject]
+    public void Construct(IMovementInput input)
+    {
+        this.input = input;
+    }
 
     private void Awake()
     {
-        input = GetComponent<IMovementInput>();
         rb = GetComponent<Rigidbody>();
         rb.centerOfMass = centerOfMass.transform.localPosition;
-    }
-
-    void Start()
-    {
-        input.OnHandbrakeInput += Input_OnHandbrakeInput;
-       
-    }
-
-    private void OnDestroy()
-    {
-        input.OnHandbrakeInput -= Input_OnHandbrakeInput;
-    }
-
-    private void Input_OnHandbrakeInput()
-    {
-        Handbrake();
+        rb.mass = carStats.mass;
     }
 
     private void FixedUpdate()
     {
+        currentCarStats.speed = transform.InverseTransformDirection(rb.velocity).z;
         SteerDriveWheels(input.GetHorizontalInput());
         Accelerate(input.GetForwardInput());
         Break(input.GetForwardInput());
@@ -68,13 +47,16 @@ public class CarController : MonoBehaviour
 
     private void SteerDriveWheels(float input)
     {
-        _frontLeftWheelCollider.steerAngle = input * maxSteerAngle;
-        _frontRightWheelCollider.steerAngle = input * maxSteerAngle;
+        _wheelColliders[0].steerAngle = input * carStats.steerAngle;
+        _wheelColliders[1].steerAngle = input * carStats.steerAngle;
     }
 
     private void Accelerate(float input)
     {
-        _frontLeftWheelCollider.motorTorque = _frontRightWheelCollider.motorTorque = input * horsePower;
+        _wheelColliders[0].motorTorque =
+        _wheelColliders[1].motorTorque =
+        _wheelColliders[2].motorTorque =
+        _wheelColliders[3].motorTorque = input * carStats.HP;
     }
 
     private void Break(float input)
@@ -84,10 +66,10 @@ public class CarController : MonoBehaviour
         {
             if (input < 0)
             {
-                _frontLeftWheelCollider.brakeTorque =
-                _frontRightWheelCollider.brakeTorque =
-                _rearRightWheelCollider.brakeTorque =
-                _rearLeftWheelCollider.brakeTorque = -input * brakePower;
+                _wheelColliders[0].brakeTorque =
+                _wheelColliders[1].brakeTorque =
+                _wheelColliders[2].brakeTorque =
+                _wheelColliders[3].brakeTorque = -input * carStats.brakePower;
             }
             else
             {
@@ -98,48 +80,31 @@ public class CarController : MonoBehaviour
         {
             if (input > 0)
             {
-                _frontLeftWheelCollider.brakeTorque =
-                _frontRightWheelCollider.brakeTorque =
-                _rearRightWheelCollider.brakeTorque =
-                _rearLeftWheelCollider.brakeTorque =  brakePower;
+                _wheelColliders[0].brakeTorque =
+                _wheelColliders[1].brakeTorque =
+                _wheelColliders[2].brakeTorque =
+                _wheelColliders[3].brakeTorque = carStats.brakePower;
             }
             else
             {
                 RemoveBreakForce();
             }
-        }      
+        }
     }
 
     private void RemoveBreakForce()
     {
-        _frontLeftWheelCollider.brakeTorque =
-                _frontRightWheelCollider.brakeTorque =
-                _rearRightWheelCollider.brakeTorque =
-                _rearLeftWheelCollider.brakeTorque = 0;
+        _wheelColliders[0].brakeTorque =
+                _wheelColliders[1].brakeTorque =
+                _wheelColliders[2].brakeTorque =
+                _wheelColliders[3].brakeTorque = 0;
     }
 
-    private void QuickRecoveryAfterReverse(float input)
-    {
-        if (input > 0 && rb.velocity.z < 0)
-        {
-            _frontLeftWheelCollider.brakeTorque =
-        _frontRightWheelCollider.brakeTorque =
-        _rearRightWheelCollider.brakeTorque =
-        _rearLeftWheelCollider.brakeTorque = brakePower;
-        }
-        else
-        {
-            _frontLeftWheelCollider.brakeTorque =
-        _frontRightWheelCollider.brakeTorque =
-        _rearRightWheelCollider.brakeTorque =
-        _rearLeftWheelCollider.brakeTorque = 0;
-        }
-    }
 
     private void Handbrake()
     {
-        _rearRightWheelCollider.brakeTorque =
-        _rearLeftWheelCollider.brakeTorque = brakePower * 2;
+        _wheelColliders[2].brakeTorque =
+        _wheelColliders[3].brakeTorque = carStats.brakePower * 5;
     }
 
     private void AddDownforce()

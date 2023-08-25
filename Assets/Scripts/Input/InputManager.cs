@@ -1,13 +1,13 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
     public static InputManager Instance;
     public event Action OnHandbrakePerformed;
+
+    public event Action OnGoDown;
+    public event Action OnGoUp;
 
     private PlayerInputActions playerInputActions;
 
@@ -27,14 +27,19 @@ public class InputManager : MonoBehaviour
     {
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();
-        playerInputActions.Player.Handbrake.performed += Handbrake_performed;
+        playerInputActions.Player.GoDown.performed += GoDown_performed;
+        playerInputActions.Player.GoUp.performed += GoUp_performed;
     }
 
-    private void Handbrake_performed(InputAction.CallbackContext obj)
+    private void GoUp_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        OnHandbrakePerformed?.Invoke();    
+        OnGoUp?.Invoke();
     }
 
+    private void GoDown_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        OnGoDown?.Invoke();
+    }
 
     public Vector2 GetMovementVector()
     {

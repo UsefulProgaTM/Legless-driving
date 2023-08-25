@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Windows;
 
 [RequireComponent(typeof(CarController))]
 public class CarVisuals : MonoBehaviour
@@ -9,44 +6,40 @@ public class CarVisuals : MonoBehaviour
     #region Wheel Meshes
     [SerializeField]
     private GameObject[] _wheelMeshes;
+    [SerializeField]
+    private WheelCollider _steerWheel;
+    [SerializeField]
+    private Transform[] steerableWheels;
     private int _wheelMeshesSize;
 
     #endregion
 
-    private float maxSteerAngle = 35;
-
-    private IMovementInput input;
-
     private Rigidbody rb;
-
 
     private void Awake()
     {
-        input = GetComponent<IMovementInput>();
         rb = GetComponent<Rigidbody>();
         _wheelMeshesSize = _wheelMeshes.Length;
     }
 
     private void Update()
     {
-        RotateDriveWheels(input.GetHorizontalInput());
         SpinWheels();
+        SteerWheels();
     }
-
-    private void RotateDriveWheels(float angle)
-    {
-        _wheelMeshes[0].transform.localRotation =
-            _wheelMeshes[1].transform.localRotation = 
-            Quaternion.Euler(_wheelMeshes[0].transform.localRotation.eulerAngles.x, angle * maxSteerAngle, 0);
-    }
-
     private void SpinWheels()
     {
         float localVelocityZ = transform.InverseTransformDirection(rb.velocity).z;
-
         for (int i = 0; i < _wheelMeshesSize; i++)
         {
-            _wheelMeshes[i].transform.Rotate(Vector3.right * localVelocityZ);
+            _wheelMeshes[i].transform.localRotation *= Quaternion.Euler(Vector3.right * localVelocityZ);
+        }
+    }
+    private void SteerWheels()
+    {
+        for (int i = 0; i < steerableWheels.Length; i++)
+        {
+            steerableWheels[i].localRotation = Quaternion.Euler(0, _steerWheel.steerAngle, 0);
         }
     }
 }
