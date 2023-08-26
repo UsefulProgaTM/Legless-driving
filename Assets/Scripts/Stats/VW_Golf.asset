@@ -12,7 +12,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7543d84ece264f48b6c90c651585357, type: 3}
   m_Name: VW_Golf
   m_EditorClassIdentifier: 
-  HP: 200
+  horsePower:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 899.62537
+      value: 79.172485
+      inSlope: 0.024781168
+      outSlope: 0.024781168
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 4814.456
+      value: 176.18655
+      inSlope: 0.012826614
+      outSlope: 0.012826614
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 6000.2554
+      value: 82.81079
+      inSlope: -0.27545428
+      outSlope: -0.27545428
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.21040866
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  gearRatios:
+  - 20
+  - 13
+  - 10
+  - 7
+  - 5
+  - -10
+  minRPM: 900
+  maxRPM: 6000
+  downforce: 100
   brakePower: 5000
-  steerAngle: 40
-  mass: 1000
+  steerAngle: 35
+  mass: 700

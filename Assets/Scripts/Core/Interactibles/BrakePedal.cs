@@ -1,18 +1,15 @@
 using LeglessDriving;
-using UnityEngine;
-using LeglessDriving;
 
-public class BrakePedal : BasePedal, IInteractible
+public class BrakePedal : BasePedal, IInteractible, IBreakInput
 {
-    public void Interact(bool hasBrick)
+    public void Interact()
     {
-        InteractWithBrick(hasBrick);
-        InteractWithNoBrick(hasBrick);
-
+        InteractWithBrick();
+        TryManuallyPushPedal();
     }
 
-    private void Update()
+    public float GetInput()
     {
-        RotateToTarget();
+        return targetRotation == pushedRotation ? 1 : 0;
     }
 }

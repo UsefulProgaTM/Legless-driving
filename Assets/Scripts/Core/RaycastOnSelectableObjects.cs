@@ -6,14 +6,13 @@ public class RaycastOnSelectableObjects : MonoBehaviour, IRaycast
 
     private GameObject _selected;
 
-    private float dotThreshold = 0.97f;
+    private float dotThreshold = 0.92f;
 
     private Vector2 rayDestination;
 
     private void Awake()
     {
-        GameObject[] temp = GameObject.FindGameObjectsWithTag(Tags.Tag.Outline.ToString()
-    );
+        GameObject[] temp = GameObject.FindGameObjectsWithTag(Tags.Tag.Outline.ToString());
         selectableObjectTransfrorms = new Transform[temp.Length];
         for (int i = 0; i < temp.Length; i++)
         {
@@ -35,7 +34,7 @@ public class RaycastOnSelectableObjects : MonoBehaviour, IRaycast
         {
             float lookPercent = Vector3.Dot(ray.direction.normalized, (selectableObjectTransfrorms[i].position - ray.origin).normalized);
 
-            if (lookPercent > closestTransformValue + 0.05f && lookPercent > dotThreshold)
+            if (lookPercent > closestTransformValue && lookPercent > dotThreshold)
             {
                 closestTransformValue = lookPercent;
                 closestTransformID = i;
@@ -47,6 +46,14 @@ public class RaycastOnSelectableObjects : MonoBehaviour, IRaycast
 
     public GameObject GetRaycastResult()
     {
+        if (_selected != null)
+        {
+            if(!_selected.gameObject.activeInHierarchy)
+            {
+                return null;
+            }
+        }
+            
         return _selected;
     }
 }

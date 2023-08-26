@@ -1,6 +1,7 @@
+using LeglessDriving;
 using System;
 
-public class PlayerInput : IMovementInput
+public class PlayerInput : IHorizontalInput
 {
     public event Action OnHandbrakeInput;
 
@@ -8,9 +9,4 @@ public class PlayerInput : IMovementInput
     {
         return InputManager.Instance.GetMovementVector().x;
     }
-    public float GetForwardInput()
-    {
-        return InputManager.Instance.GetMovementVector().y;
-    }
-
 }

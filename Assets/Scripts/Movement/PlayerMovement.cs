@@ -19,30 +19,23 @@ namespace LeglessDriving
         // Start is called before the first frame update
         void Start()
         {
-            targetPos = transform;
-            InputManager.Instance.OnGoUp += Instance_OnGoUp;
-            InputManager.Instance.OnGoDown += Instance_OnGoDown;
+            targetPos = goUpPos;
+            InputManager.Instance.OnChangePosition += Instance_OnGoDown;
         }
         private void OnDestroy()
         {
-            InputManager.Instance.OnGoUp -= Instance_OnGoUp;
-            InputManager.Instance.OnGoDown -= Instance_OnGoDown;
+            InputManager.Instance.OnChangePosition -= Instance_OnGoDown;
         }
 
         private void Instance_OnGoDown()
         {
-            targetPos = goDownPos;
-        }
-
-        private void Instance_OnGoUp()
-        {
-            targetPos = goUpPos;
+            targetPos = targetPos == goDownPos ? goUpPos : goDownPos;
         }
 
         // Update is called once per frame
         void Update()
         {
-            transform.position = Vector3.SmoothDamp(transform.position, targetPos.position, ref smDampVelocity, smDampTime);
+            transform.localPosition = Vector3.SmoothDamp(transform.localPosition, targetPos.localPosition, ref smDampVelocity, smDampTime);
         }
     }
 }

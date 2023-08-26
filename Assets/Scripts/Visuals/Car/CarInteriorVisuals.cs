@@ -1,3 +1,4 @@
+using LeglessDriving;
 using UnityEngine;
 using Zenject;
 
@@ -16,10 +17,10 @@ public class CarInteriorVisuals : MonoBehaviour
     [SerializeField]
     private Transform shifter;
 
-    private IMovementInput input;
+    private IHorizontalInput input;
 
     [Inject]
-    public void Construct(IMovementInput input)
+    public void Construct(IHorizontalInput input)
     {
         this.input = input;
     }

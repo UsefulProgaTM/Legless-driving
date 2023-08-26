@@ -1,15 +1,14 @@
 using LeglessDriving;
 
-public class GasPedal : BasePedal, IInteractible
+public class GasPedal : BasePedal, IInteractible, IGasInput
 {
-    public void Interact(bool hasBrick)
+    public void Interact()
     {
-        InteractWithBrick(hasBrick);
-        InteractWithNoBrick(hasBrick);
+        InteractWithBrick();
+        TryManuallyPushPedal();
     }
-
-    private void Update()
+    public float GetInput()
     {
-        RotateToTarget();
+        return targetRotation == pushedRotation ? 1 : 0;
     }
 }

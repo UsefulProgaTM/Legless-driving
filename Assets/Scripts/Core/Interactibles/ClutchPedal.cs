@@ -1,17 +1,15 @@
 using LeglessDriving;
-using UnityEngine;
-using LeglessDriving;
 
-public class ClutchPedal : BasePedal, IInteractible
+public class ClutchPedal : BasePedal, IInteractible, IClutch
 {
-    public void Interact(bool hasBrick)
+    public void Interact()
     {
-        InteractWithBrick(hasBrick);
-        InteractWithNoBrick(hasBrick);
+        InteractWithBrick();
+        TryManuallyPushPedal();
     }
 
-    private void Update()
+    public bool ClutchEnabled
     {
-        RotateToTarget();
+        get {return targetRotation == pushedRotation;}
     }
 }

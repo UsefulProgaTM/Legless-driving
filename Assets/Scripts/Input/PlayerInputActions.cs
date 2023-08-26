@@ -55,27 +55,36 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""GoDown"",
-                    ""type"": ""Button"",
+                    ""name"": ""ChangePosition"",
+                    ""type"": ""Value"",
                     ""id"": ""ae56b1bc-4adb-46ae-8542-3f5fb0866a46"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""GoUp"",
-                    ""type"": ""Button"",
-                    ""id"": ""865c6f1a-516b-4e17-a999-c4d8e005022f"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""Interact"",
                     ""type"": ""Button"",
                     ""id"": ""d8f21290-f37c-46ff-92ec-9e1ac53a1d67"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GearDown"",
+                    ""type"": ""Button"",
+                    ""id"": ""47ba21d9-77be-4ef5-9016-5348c15c857d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GearUp"",
+                    ""type"": ""Button"",
+                    ""id"": ""5205feed-b2fb-4ad7-872d-49ee69fe958e"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -163,33 +172,44 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""7d383239-db82-4802-8487-062074636b62"",
-                    ""path"": ""<Keyboard>/leftCtrl"",
+                    ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""GoDown"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""a5620a80-ae02-4780-b064-24dd3bf9eb9b"",
-                    ""path"": ""<Keyboard>/leftShift"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""GoUp"",
+                    ""action"": ""ChangePosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
                     ""id"": ""16292cc4-f396-4953-8d99-e4655b097c63"",
-                    ""path"": ""<Keyboard>/f"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d521bd77-11a7-4441-8e60-2cf5ed1cf991"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GearDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""68187b6f-de17-4162-89b8-6b62e9c92a85"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GearUp"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -203,9 +223,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
         m_Player_Handbrake = m_Player.FindAction("Handbrake", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
-        m_Player_GoDown = m_Player.FindAction("GoDown", throwIfNotFound: true);
-        m_Player_GoUp = m_Player.FindAction("GoUp", throwIfNotFound: true);
+        m_Player_ChangePosition = m_Player.FindAction("ChangePosition", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+        m_Player_GearDown = m_Player.FindAction("GearDown", throwIfNotFound: true);
+        m_Player_GearUp = m_Player.FindAction("GearUp", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -270,9 +291,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Movement;
     private readonly InputAction m_Player_Handbrake;
     private readonly InputAction m_Player_Look;
-    private readonly InputAction m_Player_GoDown;
-    private readonly InputAction m_Player_GoUp;
+    private readonly InputAction m_Player_ChangePosition;
     private readonly InputAction m_Player_Interact;
+    private readonly InputAction m_Player_GearDown;
+    private readonly InputAction m_Player_GearUp;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -280,9 +302,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Movement => m_Wrapper.m_Player_Movement;
         public InputAction @Handbrake => m_Wrapper.m_Player_Handbrake;
         public InputAction @Look => m_Wrapper.m_Player_Look;
-        public InputAction @GoDown => m_Wrapper.m_Player_GoDown;
-        public InputAction @GoUp => m_Wrapper.m_Player_GoUp;
+        public InputAction @ChangePosition => m_Wrapper.m_Player_ChangePosition;
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
+        public InputAction @GearDown => m_Wrapper.m_Player_GearDown;
+        public InputAction @GearUp => m_Wrapper.m_Player_GearUp;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -301,15 +324,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
-            @GoDown.started += instance.OnGoDown;
-            @GoDown.performed += instance.OnGoDown;
-            @GoDown.canceled += instance.OnGoDown;
-            @GoUp.started += instance.OnGoUp;
-            @GoUp.performed += instance.OnGoUp;
-            @GoUp.canceled += instance.OnGoUp;
+            @ChangePosition.started += instance.OnChangePosition;
+            @ChangePosition.performed += instance.OnChangePosition;
+            @ChangePosition.canceled += instance.OnChangePosition;
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
+            @GearDown.started += instance.OnGearDown;
+            @GearDown.performed += instance.OnGearDown;
+            @GearDown.canceled += instance.OnGearDown;
+            @GearUp.started += instance.OnGearUp;
+            @GearUp.performed += instance.OnGearUp;
+            @GearUp.canceled += instance.OnGearUp;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -323,15 +349,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
-            @GoDown.started -= instance.OnGoDown;
-            @GoDown.performed -= instance.OnGoDown;
-            @GoDown.canceled -= instance.OnGoDown;
-            @GoUp.started -= instance.OnGoUp;
-            @GoUp.performed -= instance.OnGoUp;
-            @GoUp.canceled -= instance.OnGoUp;
+            @ChangePosition.started -= instance.OnChangePosition;
+            @ChangePosition.performed -= instance.OnChangePosition;
+            @ChangePosition.canceled -= instance.OnChangePosition;
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
+            @GearDown.started -= instance.OnGearDown;
+            @GearDown.performed -= instance.OnGearDown;
+            @GearDown.canceled -= instance.OnGearDown;
+            @GearUp.started -= instance.OnGearUp;
+            @GearUp.performed -= instance.OnGearUp;
+            @GearUp.canceled -= instance.OnGearUp;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -354,8 +383,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnHandbrake(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
-        void OnGoDown(InputAction.CallbackContext context);
-        void OnGoUp(InputAction.CallbackContext context);
+        void OnChangePosition(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnGearDown(InputAction.CallbackContext context);
+        void OnGearUp(InputAction.CallbackContext context);
     }
 }

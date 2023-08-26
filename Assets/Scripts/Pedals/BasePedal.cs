@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using Zenject;
 
@@ -22,6 +22,17 @@ namespace LeglessDriving
 
         protected bool brickOnPedal = false;
 
+        private SmoothRotation smoothRotation;
+        private float smDampTime = 0.2f;
+
+        [Inject]
+        private void Construct(Player player, SmoothRotation smoothRotation)
+        {
+            this.player = player;
+            this.smoothRotation = smoothRotation;
+            smoothRotation.SetSmoothTime(smDampTime);
+        }
+
         private void Awake()
         {
             targetRotation = new Vector3(parentToRotate.rotation.eulerAngles.x, 0,0);
@@ -30,55 +41,55 @@ namespace LeglessDriving
             pushedRotation += new Vector3(-15, 0, 0);
         }
 
-        private float velocity;
-        private float smDampTime = 0.2f;
-
-        public void InteractWithBrick(bool playerHasBrick)
+        public void InteractWithBrick()
         {
-            if(playerHasBrick || brickOnPedal)
+            if (brickOnPedal)
             {
-                brick.SetActive(playerHasBrick);
-                brickOnPedal = brick.activeSelf;
-                if (brickOnPedal)
-                {
-                    ReactToBrickPut();
-                }
-                else
-                {
-                    ReactToBrickRemove();
-                }
+                ReactToBrickRemove();
+            }
+            else if(player.HasBrick)
+            {
+                ReactToBrickPut();
             }
         }
 
-        public void InteractWithNoBrick(bool playerHasBrick)
+        public void TryManuallyPushPedal()
         {
-            if(!playerHasBrick && !brickOnPedal)
+            if (!player.HasBrick && !brickOnPedal)
             {
-                Debug.Log("As intended");
+                StartCoroutine(ManuallyPushPedal());
             }
+        }
+
+        private IEnumerator ManuallyPushPedal()
+        {
+            while(InputManager.Instance.IsInteractPressed())
+            {
+                yield return null;
+                targetRotation = pushedRotation;
+            }
+            targetRotation = freeRotation;
         }
 
         private void ReactToBrickRemove()
         {
             targetRotation = freeRotation;
+            brick.SetActive(false);
+            brickOnPedal = false;
             player.PickupBrick();
         }
 
         private void ReactToBrickPut()
         {
             targetRotation = pushedRotation;
+            brick.SetActive(true);
+            brickOnPedal = true;
             player.PutBrick();
         }
 
-        protected void RotateToTarget()
+        private void Update()
         {
-            parentToRotate.transform.rotation =
-                Quaternion.Euler(
-                    new Vector3(
-                        Mathf.SmoothDampAngle(parentToRotate.transform.rotation.eulerAngles.x,
-                        targetRotation.x,
-                        ref velocity,
-                    smDampTime), 0, 0));
+            parentToRotate.localRotation = smoothRotation.RotateAroundXAsix(parentToRotate.transform, targetRotation);
         }
     }
 }

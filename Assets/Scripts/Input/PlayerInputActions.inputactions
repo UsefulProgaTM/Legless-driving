@@ -33,27 +33,36 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "GoDown",
-                    "type": "Button",
+                    "name": "ChangePosition",
+                    "type": "Value",
                     "id": "ae56b1bc-4adb-46ae-8542-3f5fb0866a46",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "GoUp",
-                    "type": "Button",
-                    "id": "865c6f1a-516b-4e17-a999-c4d8e005022f",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Interact",
                     "type": "Button",
                     "id": "d8f21290-f37c-46ff-92ec-9e1ac53a1d67",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "GearDown",
+                    "type": "Button",
+                    "id": "47ba21d9-77be-4ef5-9016-5348c15c857d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "GearUp",
+                    "type": "Button",
+                    "id": "5205feed-b2fb-4ad7-872d-49ee69fe958e",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -141,33 +150,44 @@
                 {
                     "name": "",
                     "id": "7d383239-db82-4802-8487-062074636b62",
-                    "path": "<Keyboard>/leftCtrl",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "GoDown",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "a5620a80-ae02-4780-b064-24dd3bf9eb9b",
-                    "path": "<Keyboard>/leftShift",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "GoUp",
+                    "action": "ChangePosition",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "16292cc4-f396-4953-8d99-e4655b097c63",
-                    "path": "<Keyboard>/f",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d521bd77-11a7-4441-8e60-2cf5ed1cf991",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GearDown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "68187b6f-de17-4162-89b8-6b62e9c92a85",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GearUp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

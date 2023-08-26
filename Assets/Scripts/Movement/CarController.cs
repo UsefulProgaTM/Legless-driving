@@ -4,111 +4,58 @@ using Zenject;
 
 public class CarController : MonoBehaviour
 {
-    private IMovementInput input;
+    //[SerializeField]
+    //private BrakePedal breakInput;
+    //private IHorizontalInput horizontalInput;
+    //[SerializeField]
+    //private Handbrake handbrakeInput;
+
+    //[SerializeField]
+    //private Shifter shifter;
 
     [SerializeField]
-    private CurrentCarStats currentCarStats;
-    [SerializeField]
-    private CarStats carStats;
-
-    private Rigidbody rb;
+    private CurrentCarStats _currentCarStats;
 
     [SerializeField]
-    private GameObject centerOfMass;
-    private float downforceAmount = 50;
+    private CarStats _carStats;
+
+    [SerializeField]    
+    private Shifter _shifter;
+
+    private Body _body;
+    private Engine _engine;
+    private Breaks _breaks;
+    private Handling _handling;
+    private Transmission _transmission;
+    //[SerializeField]
+    //private Transmission _transmission;
+
+    private Rigidbody _rb;
 
     #region Wheel Colliders
     [SerializeField]
     private WheelCollider[] _wheelColliders;
     #endregion
-    private float maxSteerAngle = 35;
-
-    [Inject]
-    public void Construct(IMovementInput input)
-    {
-        this.input = input;
-    }
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody>();
-        rb.centerOfMass = centerOfMass.transform.localPosition;
-        rb.mass = carStats.mass;
+        _rb = GetComponent<Rigidbody>();
+
+        _body = GetComponent<Body>();
+        _engine = GetComponent<Engine>();
+        _breaks = GetComponent<Breaks>();
+        _handling = GetComponent<Handling>();
+        _transmission = GetComponent<Transmission>();
+
+        _body.Initialize(_rb, _carStats);
+        _transmission.Initialize(_carStats, _wheelColliders[0], _shifter);
+        _engine.Initialize(_wheelColliders, _carStats, _transmission, _shifter);
+        _breaks.Initialize(_rb, _carStats, _wheelColliders);
+        _handling.Initialize(_wheelColliders, _carStats);
     }
 
     private void FixedUpdate()
     {
-        currentCarStats.speed = transform.InverseTransformDirection(rb.velocity).z;
-        SteerDriveWheels(input.GetHorizontalInput());
-        Accelerate(input.GetForwardInput());
-        Break(input.GetForwardInput());
-        AddDownforce();
-    }
-
-    private void SteerDriveWheels(float input)
-    {
-        _wheelColliders[0].steerAngle = input * carStats.steerAngle;
-        _wheelColliders[1].steerAngle = input * carStats.steerAngle;
-    }
-
-    private void Accelerate(float input)
-    {
-        _wheelColliders[0].motorTorque =
-        _wheelColliders[1].motorTorque =
-        _wheelColliders[2].motorTorque =
-        _wheelColliders[3].motorTorque = input * carStats.HP;
-    }
-
-    private void Break(float input)
-    {
-        float localVelocityZ = transform.InverseTransformDirection(rb.velocity).z;
-        if (localVelocityZ > 0)
-        {
-            if (input < 0)
-            {
-                _wheelColliders[0].brakeTorque =
-                _wheelColliders[1].brakeTorque =
-                _wheelColliders[2].brakeTorque =
-                _wheelColliders[3].brakeTorque = -input * carStats.brakePower;
-            }
-            else
-            {
-                RemoveBreakForce();
-            }
-        }
-        else
-        {
-            if (input > 0)
-            {
-                _wheelColliders[0].brakeTorque =
-                _wheelColliders[1].brakeTorque =
-                _wheelColliders[2].brakeTorque =
-                _wheelColliders[3].brakeTorque = carStats.brakePower;
-            }
-            else
-            {
-                RemoveBreakForce();
-            }
-        }
-    }
-
-    private void RemoveBreakForce()
-    {
-        _wheelColliders[0].brakeTorque =
-                _wheelColliders[1].brakeTorque =
-                _wheelColliders[2].brakeTorque =
-                _wheelColliders[3].brakeTorque = 0;
-    }
-
-
-    private void Handbrake()
-    {
-        _wheelColliders[2].brakeTorque =
-        _wheelColliders[3].brakeTorque = carStats.brakePower * 5;
-    }
-
-    private void AddDownforce()
-    {
-        rb.AddForce(-transform.up * downforceAmount * rb.velocity.magnitude);
+        _currentCarStats.speed = transform.InverseTransformDirection(_rb.velocity).z;
     }
 }

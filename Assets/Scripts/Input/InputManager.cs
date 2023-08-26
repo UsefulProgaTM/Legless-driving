@@ -6,9 +6,10 @@ public class InputManager : MonoBehaviour
     public static InputManager Instance;
     public event Action OnHandbrakePerformed;
 
-    public event Action OnGoDown;
-    public event Action OnGoUp;
+    public event Action OnChangePosition;
     public event Action OnInteract;
+    public event Action OnGearDown;
+    public event Action OnGearUp;
 
 
     private PlayerInputActions playerInputActions;
@@ -29,9 +30,25 @@ public class InputManager : MonoBehaviour
     {
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();
-        playerInputActions.Player.GoDown.performed += GoDown_performed;
-        playerInputActions.Player.GoUp.performed += GoUp_performed;
+        playerInputActions.Player.ChangePosition.performed += ChangePosition_performed;
         playerInputActions.Player.Interact.performed += Interact_performed;
+        playerInputActions.Player.GearDown.performed += GearDown_performed;
+        playerInputActions.Player.GearUp.performed += GearUp_performed;
+    }
+
+    private void GearUp_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        OnGearUp?.Invoke();
+    }
+
+    private void GearDown_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        OnGearDown?.Invoke();
+    }
+
+    public bool IsInteractPressed()
+    {
+        return playerInputActions.Player.Interact.IsPressed();
     }
 
     private void Interact_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -39,14 +56,9 @@ public class InputManager : MonoBehaviour
         OnInteract?.Invoke();
     }
 
-    private void GoUp_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    private void ChangePosition_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        OnGoUp?.Invoke();
-    }
-
-    private void GoDown_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-    {
-        OnGoDown?.Invoke();
+        OnChangePosition?.Invoke();
     }
 
     public Vector2 GetMovementVector()

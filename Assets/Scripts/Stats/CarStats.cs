@@ -8,7 +8,11 @@ namespace LeglessDriving
     [CreateAssetMenu()]
     public class CarStats : ScriptableObject
     {
-        public int HP;
+        public AnimationCurve horsePower;
+        public float[] gearRatios;
+        public float minRPM;
+        public float maxRPM;
+        public float downforce;
         public float brakePower;
         public float steerAngle;
         public float mass;
