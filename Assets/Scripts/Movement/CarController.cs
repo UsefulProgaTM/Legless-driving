@@ -65,12 +65,15 @@ public class CarController : MonoBehaviour
         _shifter.Initialize(_clutch);
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         _currentCarStats.speed = transform.InverseTransformDirection(_rb.velocity).z;
+    }
 
+    private void FixedUpdate()
+    {
         _body.AddDownforce();
-        _engine.Accelerate(_gasInput.GetInput() * _carStats.horsePower.Evaluate(_transmission.EvaluateRPM()));
+        _engine.Accelerate(_gasInput.GetInput(), _transmission.EvaluateRPM());
         _breaks.Break(_breakInput.GetInput());
         _handling.SteerDriveWheels(_horizontalInput.GetHorizontalInput());
         _handbrake.Handbrake();

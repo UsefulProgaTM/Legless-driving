@@ -2298,6 +2298,16 @@ PrefabInstance:
       propertyPath: _shifterPosArray.Array.data[5]
       value: 
       objectReference: {fileID: 504864238}
+    - target: {fileID: 583815771258085223, guid: 5bca0f532f5dd2345bcf40a43f2571d0,
+        type: 3}
+      propertyPath: m_ForwardFriction.m_Stiffness
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 583815771258085223, guid: 5bca0f532f5dd2345bcf40a43f2571d0,
+        type: 3}
+      propertyPath: m_SidewaysFriction.m_Stiffness
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 998113759648074118, guid: 5bca0f532f5dd2345bcf40a43f2571d0,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -2332,6 +2342,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1887570765514618701, guid: 5bca0f532f5dd2345bcf40a43f2571d0,
+        type: 3}
+      propertyPath: m_ForwardFriction.m_Stiffness
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1887570765514618701, guid: 5bca0f532f5dd2345bcf40a43f2571d0,
+        type: 3}
+      propertyPath: m_SidewaysFriction.m_Stiffness
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2001712414809567501, guid: 5bca0f532f5dd2345bcf40a43f2571d0,
+        type: 3}
+      propertyPath: m_ForwardFriction.m_Stiffness
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2001712414809567501, guid: 5bca0f532f5dd2345bcf40a43f2571d0,
+        type: 3}
+      propertyPath: m_SidewaysFriction.m_Stiffness
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2491387348780107918, guid: 5bca0f532f5dd2345bcf40a43f2571d0,
         type: 3}
@@ -2537,6 +2567,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.051
+      objectReference: {fileID: 0}
+    - target: {fileID: 8535517557737746713, guid: 5bca0f532f5dd2345bcf40a43f2571d0,
+        type: 3}
+      propertyPath: m_ForwardFriction.m_Stiffness
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8535517557737746713, guid: 5bca0f532f5dd2345bcf40a43f2571d0,
+        type: 3}
+      propertyPath: m_SidewaysFriction.m_Stiffness
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}

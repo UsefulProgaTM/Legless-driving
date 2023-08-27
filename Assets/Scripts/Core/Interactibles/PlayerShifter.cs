@@ -45,10 +45,19 @@ namespace LeglessDriving
         {
             if (inNeutral)
             {
-                currentGearId++;
-                currentGearId = WrapGearID(currentGearId);
+                if(_clutch.ClutchEnabled)
+                {
+                    currentGearId++;
+                    currentGearId = WrapGearID(currentGearId);
+                    SwitchGear(currentGearId);
+                    return;
+                }
+                else
+                {
+                    //don't allow to shift, play sound, maybe shake shifter
+                    return;
+                }
             }
-
             SwitchGear(currentGearId);
         }
 
@@ -56,11 +65,20 @@ namespace LeglessDriving
         {
             if (inNeutral)
             {
-                currentGearId--;
-                currentGearId = WrapGearID(currentGearId);
+                if (_clutch.ClutchEnabled)
+                {
+                    currentGearId--;
+                    currentGearId = WrapGearID(currentGearId);
+                    SwitchGear(currentGearId);
+                    //don't allow to shift, play sound, maybe shake shifter
+                    return;
+                }
+                else
+                {
+                    return;
+                }
             }
-
-            SwitchGear(currentGearId);          
+            SwitchGear(currentGearId);
         }
 
         private void SwitchGear(int id)

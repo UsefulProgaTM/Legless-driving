@@ -11,6 +11,6 @@ public class SpeedometerUI : MonoBehaviour
 
     private void Update()
     {
-        text.text = Mathf.Abs((int)currentCarStats.speed * 10) + "km/h";
+        text.text = Mathf.Abs((float)System.Math.Round(currentCarStats.speed, 1)) + "km/h";
     }
 }
