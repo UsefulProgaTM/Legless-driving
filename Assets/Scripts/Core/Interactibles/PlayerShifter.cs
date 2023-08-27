@@ -3,12 +3,11 @@ using UnityEngine;
 
 namespace LeglessDriving
 {
-    public class PlayerShifter : IShifter
+    public class PlayerShifter : MonoBehaviour, IShifter
     {
         private IClutch _clutch;
 
         private Transform _transform;
-        private MonoBehaviour _mono;
 
         [SerializeField]
         private Transform[] _shifterPositionsArray;
@@ -35,13 +34,10 @@ namespace LeglessDriving
             reverse,
         }
 
-        public void Initialize(Transform transform, Transform[] shifterPosArray, Transform neutralPosition, IClutch clutch)
+        public void Initialize(IClutch clutch)
         {
             currentGearId = -1;
             _transform = transform;
-            _mono = _transform.gameObject.GetComponent<MonoBehaviour>();
-            _shifterPositionsArray = shifterPosArray;
-            _neutralPosition = neutralPosition;
             _clutch = clutch;
         }
 
@@ -72,8 +68,8 @@ namespace LeglessDriving
             inNeutral = !inNeutral;
             targetGearPos = inNeutral ? _neutralPosition.localPosition : _shifterPositionsArray[id].localPosition;
 
-            _mono.StopAllCoroutines();
-            _mono.StartCoroutine(MoveToNextGearPos());
+            StopAllCoroutines();
+            StartCoroutine(MoveToNextGearPos());
         }
 
         private int WrapGearID(int nextID)

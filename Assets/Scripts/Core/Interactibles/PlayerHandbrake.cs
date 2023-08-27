@@ -4,12 +4,9 @@ using Zenject;
 
 namespace LeglessDriving
 {
-    public class PlayerHandbrake : IHandbrake, IInteractible
+    public class PlayerHandbrake : MonoBehaviour, IHandbrake, IInteractible
     {
         private Transform parentToRotate;
-        private Transform transform;
-
-        private MonoBehaviour mono;
 
         private Vector3 startRotation;
         private Vector3 endRotation;
@@ -40,8 +37,6 @@ namespace LeglessDriving
             parentToRotate = transform.parent;
             startRotation = parentToRotate.localRotation.eulerAngles;
             endRotation = parentToRotate.localRotation.eulerAngles + new Vector3(-35f, 0, 0);
-
-            mono = transform.gameObject.GetComponent<MonoBehaviour>();
         }
 
         public void Interact()
@@ -49,11 +44,11 @@ namespace LeglessDriving
             lifted = !lifted;
             targetRotation = lifted ? endRotation : startRotation;
 
-            mono.StopAllCoroutines();
-            mono.StartCoroutine(Rotate());
+            StopAllCoroutines();
+            StartCoroutine(Rotate());
         }
 
-        public void Handbrake(bool enabled)
+        public void Handbrake()
         {
             if(GetInput())
             {

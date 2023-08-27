@@ -21,7 +21,7 @@ namespace LeglessDriving
         public float EvaluateRPM()
         {
             float rpm = _wheelCollider.rpm * _carStats.gearRatios[_shifter.GetGearID()] + _carStats.minRPM;
-
+            Debug.Log(rpm > _carStats.maxRPM ? _carStats.maxRPM : rpm);
             return rpm > _carStats.maxRPM ?_carStats.maxRPM : rpm;
         }
     }

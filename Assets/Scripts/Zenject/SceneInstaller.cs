@@ -12,8 +12,9 @@ public class SceneInstaller : MonoInstaller
     private ClutchPedal _clutchPedal;
     [SerializeField]
     private PlayerHandbrake _handbrake;
-    [SerializeField]
-    private Transmission _transmission;
+    [SerializeField]    
+    private PlayerShifter _shifter;
+
 
 
     public override void InstallBindings()
@@ -27,7 +28,7 @@ public class SceneInstaller : MonoInstaller
         Container.Bind<IBrakes>().To<Breaks>().AsTransient().NonLazy();
         Container.Bind<IHandling>().To<Handling>().AsTransient().NonLazy();
         Container.Bind<ITransmission>().To<Transmission>().AsTransient().NonLazy();
-        Container.Bind<IShifter>().To<PlayerShifter>().AsTransient().NonLazy();
+        Container.Bind<IShifter>().FromInstance(_shifter).AsSingle();
         #endregion
 
         #region Input

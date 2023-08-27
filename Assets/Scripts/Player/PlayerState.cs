@@ -27,7 +27,7 @@ namespace LeglessDriving
 
         public void SetState(State state)
         {
-            state = state;
+            this.state = state;
         }
 
         public State GetState()

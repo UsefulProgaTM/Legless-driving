@@ -13,11 +13,6 @@ public class CarController : MonoBehaviour
     [SerializeField]
     private Transform _centerOfMass;
 
-    [SerializeField]
-    private Transform[] _shifterPosArray;
-    [SerializeField]
-    private Transform _neutralPos;
-
     private IBody _body;
     private IEngine _engine;
     private IBrakes _breaks;
@@ -67,7 +62,7 @@ public class CarController : MonoBehaviour
         _handbrake.Initialize(_carStats, _wheelColliders);
         _handling.Initialize(_wheelColliders, _carStats);
         _transmission.Initialize(_carStats, _wheelColliders[0], _shifter);
-        _shifter.Initialize(transform, _shifterPosArray, _neutralPos, _clutch);
+        _shifter.Initialize(_clutch);
     }
 
     private void FixedUpdate()
@@ -75,9 +70,9 @@ public class CarController : MonoBehaviour
         _currentCarStats.speed = transform.InverseTransformDirection(_rb.velocity).z;
 
         _body.AddDownforce();
-        _engine.Accelerate(_gasInput.GetInput());
+        _engine.Accelerate(_gasInput.GetInput() * _carStats.horsePower.Evaluate(_transmission.EvaluateRPM()));
         _breaks.Break(_breakInput.GetInput());
         _handling.SteerDriveWheels(_horizontalInput.GetHorizontalInput());
-        _transmission.EvaluateRPM();
+        _handbrake.Handbrake();
     }
 }

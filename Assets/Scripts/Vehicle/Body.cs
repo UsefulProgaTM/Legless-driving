@@ -21,7 +21,7 @@ namespace LeglessDriving
 
         public void AddDownforce()
         {
-            _rb.AddForce(-transform.up * _carStats.downforce * _rb.velocity.magnitude);
+            //_rb.AddForce(_carStats.downforce * _rb.velocity.magnitude * -transform.up);
         }
     }
 }
