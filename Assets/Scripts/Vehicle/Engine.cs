@@ -1,39 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Rendering;
+
 
 namespace LeglessDriving
 {
-    public class Engine : MonoBehaviour
+    public class Engine : IEngine
     {
-        [SerializeField]
-        private GasPedal _gasPedal;
-
-        private Shifter _shifter;
+        private IShifter _shifter;
 
         private WheelCollider[] _wheelColliders;
 
         private CarStats _engineStats;
-        private Transmission _transmission;
 
-        private float rpm;
-
-        public void Initialize(WheelCollider[] wheelColliders, CarStats stats, Transmission transmission, Shifter shifter)
+        public void Initialize(WheelCollider[] wheelColliders, CarStats stats, IShifter shifter)
         {
             _wheelColliders = wheelColliders;
             _engineStats = stats;
-            _transmission = transmission;
             _shifter = shifter; 
         }
 
-        private void FixedUpdate()
-        {
-            Accelerate(_gasPedal.GetInput());
-        }
-
-        private void Accelerate(float input)
+        public void Accelerate(float input)
         {
             float reversingMultiplier = _shifter.IsReversing() ? -1 : 1;
 
@@ -58,10 +43,8 @@ namespace LeglessDriving
                 _wheelColliders[0].motorTorque =
                 _wheelColliders[1].motorTorque =
                 _wheelColliders[2].motorTorque =
-                _wheelColliders[3].motorTorque = input * reversingMultiplier * _engineStats.horsePower.Evaluate(_transmission.EvaluateRPM());
+                _wheelColliders[3].motorTorque = input * reversingMultiplier;
             }
-
-            Debug.Log((_engineStats.horsePower.Evaluate(_transmission.EvaluateRPM()) + " " + _transmission.EvaluateRPM()));
         }
     }
 }

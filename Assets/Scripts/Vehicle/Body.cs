@@ -4,30 +4,24 @@ using UnityEngine;
 
 namespace LeglessDriving
 {
-    public class Body : MonoBehaviour
+    public class Body : IBody
     {
         private Rigidbody _rb;
-        private CarStats _stats;
+        private Transform transform;
+        private CarStats _carStats;
 
-        [SerializeField]
-        private Transform centerOfMass;
-
-        public void Initialize(Rigidbody rb, CarStats stats)
+        public void Initialize(Rigidbody rb, CarStats stats, Transform transform, Transform centerOfMass)
         {
             _rb = rb;
-            _stats = stats;
             _rb.centerOfMass = centerOfMass.localPosition;
-            _rb.mass = _stats.mass;
+            _rb.mass = stats.mass;
+            _carStats = stats;
+            this.transform = transform;
         }
 
-        private void FixedUpdate()
+        public void AddDownforce()
         {
-            AddDownforce();
-        }
-
-        private void AddDownforce()
-        {
-            _rb.AddForce(-transform.up * _stats.downforce * _rb.velocity.magnitude);
+            _rb.AddForce(-transform.up * _carStats.downforce * _rb.velocity.magnitude);
         }
     }
 }

@@ -4,9 +4,12 @@ using Zenject;
 
 namespace LeglessDriving
 {
-    public class Handbrake : MonoBehaviour, IInteractible, IHandbrakeInput
+    public class PlayerHandbrake : IHandbrake, IInteractible
     {
         private Transform parentToRotate;
+        private Transform transform;
+
+        private MonoBehaviour mono;
 
         private Vector3 startRotation;
         private Vector3 endRotation;
@@ -19,6 +22,9 @@ namespace LeglessDriving
 
         private bool lifted = false;
 
+        private WheelCollider[] _wheelColliders;
+        private CarStats _carStats;
+
         [Inject]
         private void Construct(SmoothRotation smoothRotation)
         {
@@ -26,11 +32,16 @@ namespace LeglessDriving
             smoothRotation.SetSmoothTime(smDampTime);
         }
 
-        private void Awake()
+        public void Initialize(CarStats stats, WheelCollider[] wheels)
         {
+            _wheelColliders = wheels;
+            _carStats = stats;
+
             parentToRotate = transform.parent;
             startRotation = parentToRotate.localRotation.eulerAngles;
             endRotation = parentToRotate.localRotation.eulerAngles + new Vector3(-35f, 0, 0);
+
+            mono = transform.gameObject.GetComponent<MonoBehaviour>();
         }
 
         public void Interact()
@@ -38,10 +49,18 @@ namespace LeglessDriving
             lifted = !lifted;
             targetRotation = lifted ? endRotation : startRotation;
 
-            StopAllCoroutines();
-            StartCoroutine(Rotate());
+            mono.StopAllCoroutines();
+            mono.StartCoroutine(Rotate());
         }
 
+        public void Handbrake(bool enabled)
+        {
+            if(GetInput())
+            {
+                _wheelColliders[2].brakeTorque =
+                    _wheelColliders[3].brakeTorque = _carStats.brakePower * 3;
+            }
+        }
 
         private IEnumerator Rotate()
         {
