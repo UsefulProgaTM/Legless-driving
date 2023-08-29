@@ -111,8 +111,10 @@ namespace LeglessDriving
         }
 
         public int GetGearID()
-        { 
-            return inNeutral ? 0 : currentGearId; 
+        {
+            if (currentGearId < 0)
+                return 0;
+            return currentGearId; 
         }
 
         public bool IsInNeutral()

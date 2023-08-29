@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -10,6 +11,7 @@ namespace LeglessDriving
         private CarStats _carStats;
 
         private WheelCollider _wheelCollider;
+
             
         public void Initialize(CarStats carStats, WheelCollider wheelCollider, IShifter shifter)
         {
@@ -20,8 +22,8 @@ namespace LeglessDriving
 
         public float EvaluateRPM()
         {
-            float rpm = _wheelCollider.rpm / _wheelCollider.radius * _carStats.gearRatios[_shifter.GetGearID()] + _carStats.minRPM;
-            Debug.Log(rpm);
+            float rpm = _wheelCollider.rpm * _wheelCollider.radius * _carStats.gearRatios[_shifter.GetGearID()] + _carStats.minRPM;
+            
             return rpm;
         }
     }

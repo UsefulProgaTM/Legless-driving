@@ -17,16 +17,16 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 899.62537
-      value: 106.6623
-      inSlope: 0.07549387
-      outSlope: 0.07549387
+      value: 337.57275
+      inSlope: 0.10115103
+      outSlope: 0.10115103
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 6000.2554
-      value: 491.7286
+      value: 853.5067
       inSlope: -0.19958706
       outSlope: -0.19958706
       tangentMode: 0
@@ -45,7 +45,7 @@ MonoBehaviour:
   - 3.66
   minRPM: 900
   maxRPM: 6000
-  downforce: 100
-  brakePower: 200
+  downforce: 500
+  brakePower: 1000
   steerAngle: 35
-  mass: 1000
+  mass: 1500

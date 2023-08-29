@@ -6,6 +6,8 @@ public class CarController : MonoBehaviour
 {
     [SerializeField]
     private CurrentCarStats _currentCarStats;
+    
+    private EngineSoundManager _engineSoundManager;
 
     [SerializeField]
     private CarStats _carStats;
@@ -55,6 +57,7 @@ public class CarController : MonoBehaviour
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
+        _engineSoundManager = GetComponent<EngineSoundManager>();   
 
         _body.Initialize(_rb, _carStats, transform, _centerOfMass);
         _engine.Initialize(_wheelColliders, _carStats, _shifter);
@@ -63,11 +66,12 @@ public class CarController : MonoBehaviour
         _handling.Initialize(_wheelColliders, _carStats);
         _transmission.Initialize(_carStats, _wheelColliders[0], _shifter);
         _shifter.Initialize(_clutch);
+        _engineSoundManager.Initialize(_transmission, _carStats);
     }
 
     private void Update()
     {
-        _currentCarStats.speed = transform.InverseTransformDirection(_rb.velocity).z;
+        _currentCarStats.speed = _wheelColliders[0].rpm * _wheelColliders[0].radius  / 60;//transform.InverseTransformDirection(_rb.velocity).z;
     }
 
     private void FixedUpdate()
