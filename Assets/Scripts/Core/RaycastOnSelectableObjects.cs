@@ -6,7 +6,7 @@ public class RaycastOnSelectableObjects : MonoBehaviour, IRaycast
 
     private GameObject _selected;
 
-    private float dotThreshold = 0.92f;
+    private float dotThreshold = 0.9f;
 
     private Vector2 rayDestination;
 

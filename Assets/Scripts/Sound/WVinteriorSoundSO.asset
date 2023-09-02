@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55dd600ede0217248b27a24227351a81, type: 3}
+  m_Name: WVinteriorSoundSO
+  m_EditorClassIdentifier: 
+  gearShiftSound: {fileID: 8300000, guid: 1bcfbd8f089404a4b95e65cabfdef292, type: 3}
+  gearNeutralSound: {fileID: 8300000, guid: 3ac769926f274ff41929d8b5692b7e0d, type: 3}
+  gearMissedSound: {fileID: 8300000, guid: 943fdfb634a47d44fb68c304b4816bb4, type: 3}
+  handbrakePulledSound: {fileID: 8300000, guid: 5344cd4fe9d5f6e4bb13db5242179bef,
+    type: 3}
+  handbrakeReleaseSound: {fileID: 8300000, guid: 5ee5a92c9099eef4680c5afdcacb6a53,
+    type: 3}

@@ -4,5 +4,6 @@ using UnityEngine;
 public class CurrentCarStats : ScriptableObject
 {
     public float speed;
-    public float wheelAngle;
+    public float rpm;
+    public float maxSpeed;
 }

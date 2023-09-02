@@ -4,9 +4,10 @@ using Zenject;
 
 public class CarController : MonoBehaviour
 {
-    [SerializeField]
+    [Inject]
     private CurrentCarStats _currentCarStats;
-    
+
+    [SerializeField]
     private EngineSoundManager _engineSoundManager;
 
     [SerializeField]
@@ -57,14 +58,13 @@ public class CarController : MonoBehaviour
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
-        _engineSoundManager = GetComponent<EngineSoundManager>();   
 
         _body.Initialize(_rb, _carStats, transform, _centerOfMass);
         _engine.Initialize(_wheelColliders, _carStats, _shifter);
         _breaks.Initialize(_carStats, _wheelColliders);
         _handbrake.Initialize(_carStats, _wheelColliders);
         _handling.Initialize(_wheelColliders, _carStats);
-        _transmission.Initialize(_carStats, _wheelColliders[0], _shifter);
+        _transmission.Initialize(_carStats, _wheelColliders, _shifter);
         _shifter.Initialize(_clutch);
         _engineSoundManager.Initialize(_transmission, _carStats);
     }
@@ -72,6 +72,7 @@ public class CarController : MonoBehaviour
     private void Update()
     {
         _currentCarStats.speed = _wheelColliders[0].rpm * _wheelColliders[0].radius  / 60;//transform.InverseTransformDirection(_rb.velocity).z;
+        _currentCarStats.rpm = _transmission.EvaluateRPM();
     }
 
     private void FixedUpdate()

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Windows;
 
 [RequireComponent(typeof(CarController))]
 public class CarVisuals : MonoBehaviour
@@ -15,7 +16,6 @@ public class CarVisuals : MonoBehaviour
     #endregion
 
     private Rigidbody rb;
-
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -32,7 +32,7 @@ public class CarVisuals : MonoBehaviour
         float localVelocityZ = transform.InverseTransformDirection(rb.velocity).z;
         for (int i = 0; i < _wheelMeshesSize; i++)
         {
-            _wheelMeshes[i].transform.localRotation *= Quaternion.Euler(Vector3.right * localVelocityZ);
+            _wheelMeshes[i].transform.localRotation *= Quaternion.Euler(new Vector3(localVelocityZ, 0, 0));
         }
     }
     private void SteerWheels()

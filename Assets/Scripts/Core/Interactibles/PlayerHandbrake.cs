@@ -6,33 +6,47 @@ namespace LeglessDriving
 {
     public class PlayerHandbrake : MonoBehaviour, IHandbrake, IInteractible
     {
-        private Transform parentToRotate;
+        private Transform _parentToRotate;
 
-        private Vector3 startRotation;
-        private Vector3 endRotation;
+        [Inject]
+        private CarSoundManager _soundManager;
 
-        private Vector3 targetRotation;
+        private Vector3 _startRotation;
+        private Vector3 _endRotation;
 
-        private float smDampTime = 0.2f;
+        private Vector3 _targetRotation;
 
-        private SmoothRotation smoothRotation;
+        private const float _smDampTimeAnimation = 0.2f;
 
-        private bool lifted = false;
+        private SmoothRotation _smoothRotation;
+
+        private bool _lifted = false;
 
         private WheelCollider[] _wheelColliders;
         private CarStats _carStats;
 
-        private WheelFrictionCurve _defaultForwardStiffness;
-        private WheelFrictionCurve _defaultSidewaysStiffness;
+        private float _extremumSlip;
+        private float _asymptoteSlip;
 
-        private WheelFrictionCurve _driftForwardStiffness;
-        private WheelFrictionCurve _driftSidewaysStiffness;
+        private WheelFrictionCurve _wheelFrictionCurve;
+
+        private float _targetSlip;
+        private float _defaultSlip;
+        private float _brakeSlip;
+
+        private float _targetStiffness;
+        private float _defaultStiffness;
+        private float _brakeStiffness;
+
+
+        private float _smDampVelocity;
+        private float _smDampTime = 0.5f;
 
         [Inject]
         private void Construct(SmoothRotation smoothRotation)
         {
-            this.smoothRotation = smoothRotation;
-            smoothRotation.SetSmoothTime(smDampTime);
+            this._smoothRotation = smoothRotation;
+            smoothRotation.SetSmoothTime(_smDampTimeAnimation);
         }
 
         public void Initialize(CarStats stats, WheelCollider[] wheels)
@@ -40,23 +54,30 @@ namespace LeglessDriving
             _wheelColliders = wheels;
             _carStats = stats;
 
-            parentToRotate = transform.parent;
-            startRotation = parentToRotate.localRotation.eulerAngles;
-            endRotation = parentToRotate.localRotation.eulerAngles + new Vector3(-35f, 0, 0);
+            _parentToRotate = transform.parent;
+            _startRotation = _parentToRotate.localRotation.eulerAngles;
+            _endRotation = _parentToRotate.localRotation.eulerAngles + new Vector3(-35f, 0, 0);
 
-            _defaultForwardStiffness = _wheelColliders[0].forwardFriction;
-            _defaultSidewaysStiffness = _wheelColliders[0].sidewaysFriction;
+            _wheelFrictionCurve = _wheelColliders[0].sidewaysFriction;
 
-            _driftForwardStiffness = _wheelColliders[0].forwardFriction;
-            _driftForwardStiffness.stiffness = 0.5f;
-            _driftSidewaysStiffness = _wheelColliders[0].sidewaysFriction;
-            _driftSidewaysStiffness.stiffness = 0.5f;
+            _defaultStiffness = _wheelColliders[0].sidewaysFriction.stiffness;
+            _brakeStiffness = 10;
+
+            _defaultSlip = _wheelFrictionCurve.extremumSlip;
+            _brakeSlip = 5;
         }
 
         public void Interact()
         {
-            lifted = !lifted;
-            targetRotation = lifted ? endRotation : startRotation;
+            _lifted = !_lifted;
+
+            if (_lifted)
+                _soundManager.PlayHandbrakePulledSound();
+            else           
+                _soundManager.PlayHandbrakeReleasedSound();
+            
+
+            _targetRotation = _lifted ? _endRotation : _startRotation;
 
             StopAllCoroutines();
             StartCoroutine(Rotate());
@@ -64,51 +85,42 @@ namespace LeglessDriving
 
         public void Handbrake()
         {
-            if(GetInput())
+            if (GetInput())
             {
                 _wheelColliders[2].brakeTorque =
-                    _wheelColliders[3].brakeTorque = _carStats.brakePower * 5;
+                    _wheelColliders[3].brakeTorque = _carStats.brakePower;
 
-                _wheelColliders[2].motorTorque =
-                    _wheelColliders[3].motorTorque = 0;
-
-                _wheelColliders[0].forwardFriction =
-                _wheelColliders[1].forwardFriction = 
-                _wheelColliders[2].forwardFriction =
-                   _wheelColliders[3].forwardFriction = _driftForwardStiffness;
-
-                _wheelColliders[0].sidewaysFriction =
-                _wheelColliders[1].sidewaysFriction =
-                _wheelColliders[2].sidewaysFriction =
-                   _wheelColliders[3].sidewaysFriction = _driftSidewaysStiffness;
+                _targetSlip = _brakeSlip;
+                _targetStiffness = _brakeStiffness;
             }
             else
             {
-                _wheelColliders[0].forwardFriction =
-                _wheelColliders[1].forwardFriction =
-                _wheelColliders[2].forwardFriction =
-                   _wheelColliders[3].forwardFriction = _defaultForwardStiffness;
-
-                _wheelColliders[0].sidewaysFriction =
-                _wheelColliders[1].sidewaysFriction =
-                _wheelColliders[2].sidewaysFriction =
-                   _wheelColliders[3].sidewaysFriction = _defaultSidewaysStiffness;
+                _targetSlip = _defaultSlip;
+                _targetStiffness = _defaultStiffness;
             }
 
+            _wheelFrictionCurve.extremumSlip = Mathf.SmoothDamp(_wheelColliders[0].sidewaysFriction.extremumSlip, _targetSlip, ref _smDampVelocity, _smDampTime);
+            _wheelFrictionCurve.asymptoteSlip = Mathf.SmoothDamp(_wheelColliders[0].sidewaysFriction.asymptoteSlip, _targetSlip, ref _smDampVelocity, _smDampTime);
+            _wheelFrictionCurve.stiffness = Mathf.SmoothDamp(_wheelColliders[0].sidewaysFriction.stiffness, _targetStiffness, ref _smDampVelocity, _smDampTime);
+
+            _wheelColliders[0].sidewaysFriction =
+            _wheelColliders[1].sidewaysFriction =
+            _wheelColliders[2].sidewaysFriction =
+               _wheelColliders[3].sidewaysFriction = _wheelFrictionCurve;
         }
 
         private IEnumerator Rotate()
         {
-            while (Mathf.Abs(parentToRotate.transform.rotation.eulerAngles.x - targetRotation.x) > 0.2f)
+            while (Mathf.Abs(_parentToRotate.transform.rotation.eulerAngles.x - _targetRotation.x) > 0.2f)
             {
-                parentToRotate.transform.localRotation = smoothRotation.RotateAroundXAsix(parentToRotate.transform, targetRotation);
+                _parentToRotate.transform.localRotation = _smoothRotation.RotateAroundXAsix(_parentToRotate.transform, _targetRotation);
                 yield return null;
             }
         }
 
         public bool GetInput()
         {
-            return lifted;
+            return _lifted;
         }
     }
 }

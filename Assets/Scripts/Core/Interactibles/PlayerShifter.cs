@@ -1,5 +1,7 @@
 using System.Collections;
+using UnityEditor.Search;
 using UnityEngine;
+using Zenject;
 
 namespace LeglessDriving
 {
@@ -9,6 +11,9 @@ namespace LeglessDriving
 
         private Transform _transform;
 
+        [Inject]
+        private CarSoundManager _soundManager;
+
         [SerializeField]
         private Transform[] _shifterPositionsArray;
 
@@ -16,12 +21,17 @@ namespace LeglessDriving
         private Transform _neutralPosition;
 
         private int currentGearId;
+        private int lastGearID;
+
+        private bool recentlyShifted = false;
 
         private Vector3 smDampVelocity;
         private float smDampTime = 0.2f;
 
         private Vector3 targetGearPos;
         private bool inNeutral = true;
+
+
 
         private enum Gears
         {
@@ -37,17 +47,21 @@ namespace LeglessDriving
         public void Initialize(IClutch clutch)
         {
             currentGearId = -1;
+            lastGearID = -1;
             _transform = transform;
             _clutch = clutch;
         }
 
-        public void ShiftUp()
+        public void ShiftGear(int increase)
         {
+            lastGearID = currentGearId;
+            recentlyShifted = true;
+
             if (inNeutral)
             {
                 if(_clutch.ClutchEnabled)
                 {
-                    currentGearId++;
+                    currentGearId += increase;
                     currentGearId = WrapGearID(currentGearId);
                     SwitchGear(currentGearId);
                     return;
@@ -55,26 +69,7 @@ namespace LeglessDriving
                 else
                 {
                     //don't allow to shift, play sound, maybe shake shifter
-                    return;
-                }
-            }
-            SwitchGear(currentGearId);
-        }
-
-        public void ShiftDown()
-        {
-            if (inNeutral)
-            {
-                if (_clutch.ClutchEnabled)
-                {
-                    currentGearId--;
-                    currentGearId = WrapGearID(currentGearId);
-                    SwitchGear(currentGearId);
-                    //don't allow to shift, play sound, maybe shake shifter
-                    return;
-                }
-                else
-                {
+                    _soundManager.PlayGearMissedSound();
                     return;
                 }
             }
@@ -84,7 +79,13 @@ namespace LeglessDriving
         private void SwitchGear(int id)
         {
             inNeutral = !inNeutral;
+
             targetGearPos = inNeutral ? _neutralPosition.localPosition : _shifterPositionsArray[id].localPosition;
+
+            if (inNeutral)
+                _soundManager.PlayGearShiftNeutralSound();
+            else          
+                _soundManager.PlayGearShiftSound();
 
             StopAllCoroutines();
             StartCoroutine(MoveToNextGearPos());
@@ -110,12 +111,40 @@ namespace LeglessDriving
             }
         }
 
-        public int GetGearID()
+        public int GetGearPositionID()
         {
-            if (currentGearId < 0)
+            if (lastGearID < 0)
                 return 0;
-            return currentGearId; 
+
+            return lastGearID;
         }
+
+        //public int GetCurrentGearEngaged()
+        //{
+        //    int result = 0;
+        //    if (recentlyShifted)
+        //        if (_clutch.ClutchEnabled)
+        //        {
+        //            result = lastGearID >= 0 ? lastGearID : 0;
+        //            Debug.Log("recentlyShifted + _clutch.ClutchEnabled");
+        //        }
+        //        else
+        //        {
+        //            result = currentGearId >= 0 ? currentGearId : 0;
+        //            Debug.Log("recentlyShifted + _clutch.ClutchDisabled");
+        //        }
+        //    else
+        //    {
+        //        result = currentGearId >= 0 ? currentGearId : 0;
+        //        Debug.Log("not recently shifted");
+        //    }
+        //    return result;
+        //}
+
+        public int GetGearAmount()
+        {
+            return 5;
+        }    
 
         public bool IsInNeutral()
         {
@@ -130,6 +159,19 @@ namespace LeglessDriving
         public bool IsReversing()
         {
             return currentGearId == _shifterPositionsArray.Length - 1;
+        }
+        private void Update()
+        {
+            if(recentlyShifted)
+            {
+                if (!_clutch.ClutchEnabled)
+                {
+                    lastGearID = currentGearId;
+                    recentlyShifted = false;
+                    Debug.Log("only now swithced gear properly");
+                }
+            }
+            Debug.Log(lastGearID + " " + currentGearId);
         }
     }
 }

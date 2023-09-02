@@ -26,12 +26,12 @@ public class SelectionManager : MonoBehaviour
 
     private void Instance_OnGearUp()
     {
-        raycast.GetRaycastResult()?.GetComponent<IShifter>()?.ShiftUp();
+        raycast.GetRaycastResult()?.GetComponent<IShifter>()?.ShiftGear(1);
     }
 
     private void Instance_OnGearDown()
     {
-        raycast.GetRaycastResult()?.GetComponent<IShifter>()?.ShiftDown();
+        raycast.GetRaycastResult()?.GetComponent<IShifter>()?.ShiftGear(-1);
     }
 
     private void OnDestroy()

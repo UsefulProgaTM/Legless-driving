@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.ShaderGraph.Internal;
@@ -10,6 +11,7 @@ namespace LeglessDriving
     {
         public AnimationCurve horsePower;
         public float[] gearRatios;
+        public float finalDrive;
         public float minRPM;
         public float maxRPM;
         public float downforce;

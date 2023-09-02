@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: CurrentCarStatsSO
   m_EditorClassIdentifier: 
   speed: 0
-  wheelAngle: 0
+  rpm: 0
+  maxSpeed: 25

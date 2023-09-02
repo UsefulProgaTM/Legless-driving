@@ -22,33 +22,53 @@ namespace LeglessDriving
         {
             float reversingMultiplier = _shifter.IsReversing() ? -1 : 1;
 
+            if (input < 0.2f)
+                input = 0.2f;
+
             float forceToApply = input * reversingMultiplier * _carStats.horsePower.Evaluate(rpm);
 
+            float decelerateForce = _wheelColliders[0].motorTorque * 0.99f;
+
             if (rpm > _carStats.maxRPM)
-                forceToApply *= -2;
+                forceToApply *= -1;
 
-            if (_shifter.IsInNeutral())
+            if (_shifter.CheckIsClutchEngaged())
             {
-                _wheelColliders[0].motorTorque =
-                _wheelColliders[1].motorTorque =
-                _wheelColliders[2].motorTorque =
-                _wheelColliders[3].motorTorque = 0;
-                return;
-            }
-
-            if(_shifter.CheckIsClutchEngaged())
-            {
-                _wheelColliders[0].motorTorque =
-                _wheelColliders[1].motorTorque =
-                _wheelColliders[2].motorTorque =
-                _wheelColliders[3].motorTorque = 0;
+                //clutch on, decelerate
+                ApplyForcesToWheels(decelerateForce);
+               // Debug.Log("clutch on, decelerate");
             }
             else
             {
-                _wheelColliders[0].motorTorque =
-                _wheelColliders[1].motorTorque =
-                _wheelColliders[2].motorTorque =
-                _wheelColliders[3].motorTorque = forceToApply;
+                if (_shifter.IsInNeutral())
+                {
+                    //clutch off, in neutral, decelerate
+                    ApplyForcesToWheels(decelerateForce);
+                    //Debug.Log("clutch off, in neutral, decelerate");
+                }
+                else
+                {
+                    //clutch off, in gear, accelerate
+                    if (input > 0.2f)
+                    {
+                        ApplyForcesToWheels(forceToApply);
+                        //Debug.Log("clutch off, in gear, accelerate");
+                    }
+                    else
+                    {
+                        ApplyForcesToWheels(forceToApply);
+                       // Debug.Log("clutch off, in gear, decelerate");
+                    }
+                }
+            }
+        }
+
+        private void ApplyForcesToWheels(float force)
+        {
+            int size = _wheelColliders.Length;
+            for (int i = 0; i < size; i++)
+            {
+                _wheelColliders[i].motorTorque = force;
             }
         }
     }

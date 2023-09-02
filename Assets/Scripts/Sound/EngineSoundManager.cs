@@ -11,62 +11,135 @@ namespace LeglessDriving
         private ITransmission _transmission;
         private CarStats _carStats;
 
-        [SerializeField]
-        private AudioSource _audioSourceIdle;
+        private AudioSource _fadeInAudioSource;
+        private AudioSource _fadeOutAudioSource;
 
         [SerializeField]
-        private AudioSource _audioSourceLowRPM;
+        private AudioSource _audioSource1;
         [SerializeField]
-        private AudioSource _audioSourceHighRPM;
+        private AudioSource _audioSource2;
 
 
         [SerializeField]
-        private AudioClip _idleClip;
-        [SerializeField]
-        private AudioClip _accelerateClip;
+        private AudioClip[] _audioClips;
 
-        private float idlePitchThreshold;
-        private float lowPitchThreshold;
+        private float[] RPMThresholds;
+
+
+        public int currentRPMPartID;
+        public int nextRPMPart;
+
+        private float crossFadeOffset = 0.2f;
 
         public void Initialize(ITransmission transmission, CarStats carStats)
         {
+            _fadeOutAudioSource = _audioSource1;
+            _fadeInAudioSource = _audioSource2;
+
+            _fadeInAudioSource.Play();
+            _fadeOutAudioSource.Play();
+
             _transmission = transmission;
             _carStats = carStats;
 
-            idlePitchThreshold = (_carStats.minRPM * 1.1f) / _carStats.maxRPM;
-            lowPitchThreshold = (_carStats.maxRPM / 2 + _carStats.minRPM) / _carStats.maxRPM;
+            RPMThresholds = new float[] {0.05f, 0.25f, 0.5f, 0.75f };
+            currentRPMPartID = 0;
+            nextRPMPart = 1;
         }
 
-        // Update is called once per frame
-        void Update()
+        public bool _accelerating = false;
+        public float lastRPMPercent;
+        public float rpmPercent;
+
+        private void FixedUpdate()
         {
-            float pitch = _transmission.EvaluateRPM() / _carStats.maxRPM;
-            HandleIdleSound(pitch);
-            HandleLowRPMSound(pitch);
-            HandleHighRPMSound(pitch);
+            lastRPMPercent = rpmPercent;
+
+            rpmPercent = _transmission.EvaluateRPM() / _carStats.maxRPM - _carStats.minRPM / _carStats.maxRPM;
+
+            rpmPercent = Mathf.Clamp01(rpmPercent);
+
+            _audioSource1.volume = 1 - rpmPercent * 5f;
+            _audioSource2.volume = Mathf.Clamp01(rpmPercent * 5f);
+            _audioSource2.pitch = rpmPercent / 2 + 0.5f;
+
+            _accelerating = rpmPercent > lastRPMPercent;
+            
+            //nextRPMPart = GetNextRPMPartID(rpmPercent);
+            //currentRPMPartID = ChangeCurrentRPMID(rpmPercent);
+            //CrossFade(rpmPercent);
         }
 
-        private void HandleIdleSound(float pitch)
-        {
-            float soundModifier  = pitch / idlePitchThreshold;
-            _audioSourceIdle.volume = soundModifier;
-            _audioSourceIdle.pitch = soundModifier;
-        }
 
-        private void HandleLowRPMSound(float pitch)
-        {
-            float soundModifier = (pitch / lowPitchThreshold) - idlePitchThreshold;
+        //private int GetNextRPMPartID(float percent)
+        //{
+        //    if(_accelerating)
+        //    {
+        //        if (currentRPMPartID + 1 >= RPMThresholds.Length)
+        //            return RPMThresholds.Length - 1;
+                
+        //        if (percent > RPMThresholds[currentRPMPartID + 1] - crossFadeOffset)
+        //            return currentRPMPartID + 1;
+        //        else
+        //            return currentRPMPartID;
+        //    }
+        //    else
+        //    {
+        //        if (currentRPMPartID - 1 < 0)
+        //            return 0;
+                
+        //        if (percent < RPMThresholds[currentRPMPartID - 1] + crossFadeOffset)
+        //            return currentRPMPartID - 1;
+        //        return currentRPMPartID;
+        //    }
+        //}
+        //private int ChangeCurrentRPMID(float percent)
+        //{
+        //    if(_accelerating)
+        //    {
+        //        if(currentRPMPartID + 1 >= RPMThresholds.Length)
+        //            return currentRPMPartID;
 
-            _audioSourceLowRPM.volume = soundModifier;
-            _audioSourceLowRPM.pitch = soundModifier;
-        }
+        //        if (percent > RPMThresholds[currentRPMPartID + 1])
+        //        {
+        //            _fadeOutAudioSource = _fadeInAudioSource;
+        //            _fadeInAudioSource = _fadeInAudioSource == _audioSource1 ? _audioSource2 : _audioSource1;
 
-        private void HandleHighRPMSound(float pitch)
-        {
-            float soundModifier = pitch  - idlePitchThreshold;
+        //            _fadeOutAudioSource.clip = _audioClips[currentRPMPartID];
+        //            _fadeInAudioSource.clip = _audioClips[nextRPMPart];
 
-            _audioSourceHighRPM.volume = soundModifier;
-            _audioSourceHighRPM.pitch = soundModifier;
-        }
+        //            _fadeOutAudioSource.Play();
+        //            _fadeInAudioSource.Play();
+
+        //            return currentRPMPartID + 1;
+        //        }
+        //        return currentRPMPartID;
+        //    }
+        //    else
+        //    {
+        //        if (currentRPMPartID - 1 < 0)
+        //            return currentRPMPartID;
+
+        //        if (percent < RPMThresholds[currentRPMPartID - 1])
+        //        {
+        //            _fadeOutAudioSource = _fadeInAudioSource;
+        //            _fadeInAudioSource = _fadeInAudioSource == _audioSource1 ? _audioSource2 : _audioSource1;
+
+        //            _fadeOutAudioSource.clip = _audioClips[currentRPMPartID];
+        //            _fadeInAudioSource.clip = _audioClips[nextRPMPart];
+
+        //            _fadeOutAudioSource.Play();
+        //            _fadeInAudioSource.Play();
+        //            return currentRPMPartID - 1;
+        //        }
+        //        return currentRPMPartID;
+        //    }
+        //}
+
+        //private void CrossFade(float percent)
+        //{
+        //    _fadeOutAudioSource.volume = 1 - percent / RPMThresholds[currentRPMPartID];
+        //    _fadeInAudioSource.volume = percent / RPMThresholds[nextRPMPart];
+        //}
     }
 }

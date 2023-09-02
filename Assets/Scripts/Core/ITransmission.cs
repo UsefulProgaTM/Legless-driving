@@ -6,7 +6,7 @@ namespace LeglessDriving
 {
     public interface ITransmission
     {
-        public void Initialize(CarStats carStats, WheelCollider wheelCollider, IShifter shifter);
+        public void Initialize(CarStats carStats, WheelCollider[] wheelColliders, IShifter shifter);
         public float EvaluateRPM();
     }
 }

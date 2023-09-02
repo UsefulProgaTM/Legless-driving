@@ -16,36 +16,46 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 899.62537
-      value: 337.57275
-      inSlope: 0.10115103
-      outSlope: 0.10115103
+      time: 891.31696
+      value: 70.544754
+      inSlope: 0.054483797
+      outSlope: 0.054483797
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 6000.2554
-      value: 853.5067
-      inSlope: -0.19958706
-      outSlope: -0.19958706
+      time: 5759.9653
+      value: 335.80722
+      inSlope: -0.10688934
+      outSlope: -0.10688934
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.07589548
+      inWeight: 0.33333334
+      outWeight: 1
+    - serializedVersion: 3
+      time: 6001.625
+      value: 294.83862
+      inSlope: -0.28007635
+      outSlope: -0.28007635
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.2707736
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
   gearRatios:
-  - 3.66
-  - 2.047
-  - 1.258
-  - 0.865
-  - 0.674
-  - 3.66
+  - 3.45
+  - 2.12
+  - 1.44
+  - 1.13
+  - 0.91
+  - 3.45
+  finalDrive: 3.89
   minRPM: 900
   maxRPM: 6000
-  downforce: 500
+  downforce: 100
   brakePower: 1000
-  steerAngle: 35
-  mass: 1500
+  steerAngle: 25
+  mass: 1000

@@ -7,13 +7,13 @@ namespace LeglessDriving
     public interface IShifter
     {
         public void Initialize(IClutch clutch);
-        public void ShiftUp();
-        public void ShiftDown();
+        public void ShiftGear(int i);
         public bool IsInNeutral();
 
         public bool CheckIsClutchEngaged();
 
         public bool IsReversing();
-        public int GetGearID();
+        public int GetGearPositionID();
+        public int GetGearAmount();
     }
 }

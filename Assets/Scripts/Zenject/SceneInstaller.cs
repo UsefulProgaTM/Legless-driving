@@ -15,12 +15,19 @@ public class SceneInstaller : MonoInstaller
     [SerializeField]    
     private PlayerShifter _shifter;
 
+    [SerializeField]
+    private CarSoundManager _carSoundManager;
+    [SerializeField]
+    private CurrentCarStats _currentCarStats;
+
 
 
     public override void InstallBindings()
     {
         Container.Bind<Player>().AsSingle().NonLazy();
         Container.Bind<SmoothRotation>().AsTransient().NonLazy();
+        Container.Bind<CarSoundManager>().FromInstance(_carSoundManager);
+        Container.Bind<CurrentCarStats>().FromInstance(_currentCarStats);
 
         #region Car parts
         Container.Bind<IBody>().To<Body>().AsTransient().NonLazy();

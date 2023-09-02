@@ -1,16 +1,22 @@
 using TMPro;
 using UnityEngine;
+using Zenject;
 
 public class SpeedometerUI : MonoBehaviour
 {
-    [SerializeField]
+    [Inject]
     private CurrentCarStats currentCarStats;
 
     [SerializeField]
-    private TextMeshProUGUI text;
+    private TextMeshProUGUI speedText;
+
+    [SerializeField]
+    private TextMeshProUGUI rpmText;
 
     private void Update()
     {
-        text.text = Mathf.Abs((float)System.Math.Round(currentCarStats.speed, 1)) + "km/h";
+        float speed = currentCarStats.speed * 10;
+        speedText.text = Mathf.Abs((int)speed) + "km/h";
+        rpmText.text = currentCarStats.rpm.ToString();
     }
 }
