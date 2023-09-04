@@ -21,6 +21,14 @@ namespace LeglessDriving
         [SerializeField]
         private AudioSource _audioSource2;
 
+        [SerializeField] 
+        private AudioSource _revLimitAudioSource;
+
+        [SerializeField]
+        private AudioClip _revLimitSound;
+        private float _revLimitAudioDuration = 0.325f;
+        private float revLimitlastPlayedTime;
+
 
         [SerializeField]
         private AudioClip[] _audioClips;
@@ -47,6 +55,8 @@ namespace LeglessDriving
             RPMThresholds = new float[] {0.05f, 0.25f, 0.5f, 0.75f };
             currentRPMPartID = 0;
             nextRPMPart = 1;
+
+            revLimitlastPlayedTime = Time.time;
         }
 
         public bool _accelerating = false;
@@ -55,17 +65,29 @@ namespace LeglessDriving
 
         public void ManageEngineSound()
         {
+            Debug.Log(Time.time);
             lastRPMPercent = rpmPercent;
 
             rpmPercent = _currentCarStats.rpm / _carStats.maxRPM - _carStats.minRPM / _carStats.maxRPM;
 
             rpmPercent = Mathf.Clamp01(rpmPercent);
 
+            PlayRevLimitSound(rpmPercent);
+
             _audioSource1.volume = 1 - rpmPercent * 9f;
             _audioSource2.volume = Mathf.Clamp01(rpmPercent * 5f);
             _audioSource2.pitch = rpmPercent / 2 + 0.5f;
 
             _accelerating = rpmPercent > lastRPMPercent;
+        }
+
+        private void PlayRevLimitSound(float percent)
+        {
+            if(percent + _carStats.minRPM / _carStats.maxRPM > 0.99f && Time.time >= revLimitlastPlayedTime + _revLimitAudioDuration)
+            {
+                revLimitlastPlayedTime = Time.time;
+                _revLimitAudioSource.PlayOneShot(_revLimitSound);
+            }
         }
 
         private void FixedUpdate()

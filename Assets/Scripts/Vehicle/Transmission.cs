@@ -17,6 +17,9 @@ namespace LeglessDriving
         private float unrevvingRPM = 0;
         private float timeToHitMinRPM = 5;
 
+        private float smDampVelocity;
+        private float smDampSpeed = 2;
+
         private float rpm = 0;
 
         public void Initialize(CarStats carStats, WheelCollider[] driveWheels, IShifter shifter)
@@ -41,7 +44,11 @@ namespace LeglessDriving
             }
             else
             {
-                rpm = CalculateRPM();
+                float targetRPM = CalculateRPM();
+                if (Mathf.Abs(targetRPM - rpm) > 300)
+                    rpm = Mathf.SmoothDamp(rpm, targetRPM, ref smDampVelocity, smDampSpeed);
+                else
+                    rpm = targetRPM;
             }       
             return rpm;
         }
@@ -51,7 +58,7 @@ namespace LeglessDriving
             revvingRPM = rpm + _carStats.maxRPM * Time.deltaTime / timeToHitMaxRPM;
 
             if(revvingRPM > _carStats.maxRPM)
-                revvingRPM = _carStats.maxRPM;
+                revvingRPM = _carStats.maxRPM - UnityEngine.Random.Range(150,300);
 
             return revvingRPM;
         }

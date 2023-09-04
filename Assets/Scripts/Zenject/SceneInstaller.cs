@@ -19,6 +19,8 @@ public class SceneInstaller : MonoInstaller
     private CarSoundManager _carSoundManager;
     [SerializeField]
     private CurrentCarStats _currentCarStats;
+    [SerializeField]
+    private CarStats _vwCarStats;
 
 
 
@@ -28,6 +30,7 @@ public class SceneInstaller : MonoInstaller
         Container.Bind<SmoothRotation>().AsTransient().NonLazy();
         Container.Bind<CarSoundManager>().FromInstance(_carSoundManager);
         Container.Bind<CurrentCarStats>().FromInstance(_currentCarStats);
+        Container.Bind<CarStats>().FromInstance(_vwCarStats);
 
         #region Car parts
         Container.Bind<IBody>().To<Body>().AsTransient().NonLazy();

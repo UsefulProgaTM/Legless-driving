@@ -14,6 +14,8 @@ namespace LeglessDriving
 
         [Inject]
         private CurrentCarStats _currentCarStats;
+        [Inject]
+        private CarStats _carStats;
 
         private float defaultShakeAmp = 0;
         private float defaultShakeFreq = 0;
@@ -29,7 +31,7 @@ namespace LeglessDriving
         // Update is called once per frame
         void Update()
         {
-            float value = _currentCarStats.speed / _currentCarStats.maxSpeed;
+            float value = _currentCarStats.speed / _carStats.maxSpeed;
             _multiChannelPerlin.m_FrequencyGain = value * maxShakeFreq;
             _multiChannelPerlin.m_AmplitudeGain = value * maxShakeAmp;
         }

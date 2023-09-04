@@ -55,6 +55,7 @@ MonoBehaviour:
   finalDrive: 3.89
   minRPM: 900
   maxRPM: 6000
+  maxSpeed: 24
   downforce: 100
   brakePower: 1000
   steerAngle: 25

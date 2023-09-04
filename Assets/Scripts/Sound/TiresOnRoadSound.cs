@@ -12,10 +12,12 @@ namespace LeglessDriving
 
         [Inject]
         private CurrentCarStats _currentCarStats;
+        [Inject]
+        private CarStats _carStats;
 
         private void FixedUpdate()
         {
-                _audioSource.volume = Mathf.Clamp01(_currentCarStats.speed / _currentCarStats.maxSpeed);
+                _audioSource.volume = Mathf.Clamp01(_currentCarStats.speed / _carStats.maxSpeed);
         }
     }
 }

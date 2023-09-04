@@ -14,6 +14,7 @@ namespace LeglessDriving
         public float finalDrive;
         public float minRPM;
         public float maxRPM;
+        public float maxSpeed;
         public float downforce;
         public float brakePower;
         public float steerAngle;
