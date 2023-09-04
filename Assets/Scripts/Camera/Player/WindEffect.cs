@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.VFX;
 using Zenject;
@@ -19,10 +20,10 @@ namespace LeglessDriving
         private void FixedUpdate()
         {
             float speed = currentCarStats.speed;
-            if(speed < 7)
+            if(speed < 10)
                 speed = 0;
             windEffects[0].SetFloat(SPEED_VALUE, speed);
-            windEffects[1].SetFloat(SPEED_VALUE, speed);
+            windEffects[1].SetFloat(SPEED_VALUE, speed);     
         }
     }
 }

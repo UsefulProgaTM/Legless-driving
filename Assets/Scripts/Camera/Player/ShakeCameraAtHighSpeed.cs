@@ -18,8 +18,8 @@ namespace LeglessDriving
         private float defaultShakeAmp = 0;
         private float defaultShakeFreq = 0;
 
-        private float maxShakeAmp = 1.2f;
-        private float maxShakeFreq = 2.1f;
+        private float maxShakeAmp = 1f;
+        private float maxShakeFreq = 4f;
 
         private void Awake()
         {

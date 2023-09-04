@@ -69,18 +69,16 @@ public class CarController : MonoBehaviour
         _engineSoundManager.Initialize(_transmission, _carStats);
     }
 
-    private void Update()
-    {
-        _currentCarStats.speed = _wheelColliders[0].rpm * _wheelColliders[0].radius  / 60;//transform.InverseTransformDirection(_rb.velocity).z;
-        _currentCarStats.rpm = _transmission.EvaluateRPM();
-    }
-
     private void FixedUpdate()
     {
+        _currentCarStats.speed = _wheelColliders[0].rpm * _wheelColliders[0].radius / 60;
+        _currentCarStats.rpm = _transmission.EvaluateRPM(_gasInput.GetInput());
+
         _body.AddDownforce();
-        _engine.Accelerate(_gasInput.GetInput(), _transmission.EvaluateRPM());
+        _engine.Accelerate(_gasInput.GetInput(), _currentCarStats.rpm);
         _breaks.Break(_breakInput.GetInput());
         _handling.SteerDriveWheels(_horizontalInput.GetHorizontalInput());
         _handbrake.Handbrake();
+        _engineSoundManager.ManageEngineSound();
     }
 }

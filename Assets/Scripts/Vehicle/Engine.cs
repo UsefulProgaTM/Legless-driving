@@ -23,7 +23,7 @@ namespace LeglessDriving
             float reversingMultiplier = _shifter.IsReversing() ? -1 : 1;
 
             if (input < 0.2f)
-                input = 0.2f;
+                input = 0.1f;
 
             float forceToApply = input * reversingMultiplier * _carStats.horsePower.Evaluate(rpm);
 

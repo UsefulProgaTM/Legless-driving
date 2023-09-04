@@ -168,10 +168,8 @@ namespace LeglessDriving
                 {
                     lastGearID = currentGearId;
                     recentlyShifted = false;
-                    Debug.Log("only now swithced gear properly");
                 }
             }
-            Debug.Log(lastGearID + " " + currentGearId);
         }
     }
 }

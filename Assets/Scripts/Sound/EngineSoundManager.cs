@@ -9,6 +9,8 @@ namespace LeglessDriving
     public class EngineSoundManager : MonoBehaviour
     {
         private ITransmission _transmission;
+        [Inject]
+        private CurrentCarStats _currentCarStats;
         private CarStats _carStats;
 
         private AudioSource _fadeInAudioSource;
@@ -51,20 +53,24 @@ namespace LeglessDriving
         public float lastRPMPercent;
         public float rpmPercent;
 
-        private void FixedUpdate()
+        public void ManageEngineSound()
         {
             lastRPMPercent = rpmPercent;
 
-            rpmPercent = _transmission.EvaluateRPM() / _carStats.maxRPM - _carStats.minRPM / _carStats.maxRPM;
+            rpmPercent = _currentCarStats.rpm / _carStats.maxRPM - _carStats.minRPM / _carStats.maxRPM;
 
             rpmPercent = Mathf.Clamp01(rpmPercent);
 
-            _audioSource1.volume = 1 - rpmPercent * 5f;
+            _audioSource1.volume = 1 - rpmPercent * 9f;
             _audioSource2.volume = Mathf.Clamp01(rpmPercent * 5f);
             _audioSource2.pitch = rpmPercent / 2 + 0.5f;
 
             _accelerating = rpmPercent > lastRPMPercent;
-            
+        }
+
+        private void FixedUpdate()
+        {
+                     
             //nextRPMPart = GetNextRPMPartID(rpmPercent);
             //currentRPMPartID = ChangeCurrentRPMID(rpmPercent);
             //CrossFade(rpmPercent);
