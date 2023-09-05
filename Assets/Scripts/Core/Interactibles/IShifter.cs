@@ -13,7 +13,8 @@ namespace LeglessDriving
         public bool CheckIsClutchEngaged();
 
         public bool IsReversing();
-        public int GetGearPositionID();
+        public int GetActualGearID();
+        public int GetCurrentGearID();
         public int GetGearAmount();
     }
 }

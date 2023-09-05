@@ -80,7 +80,7 @@ namespace LeglessDriving
             {
                 wheelRPM += _driveWheels[i].rpm;
             }
-            return Mathf.Abs(wheelRPM) / _driveWheels.Length * _driveWheels[0].radius * _carStats.gearRatios[_shifter.GetGearPositionID()] * _carStats.finalDrive + _carStats.minRPM;
+            return Mathf.Abs(wheelRPM) / _driveWheels.Length * _driveWheels[0].radius * _carStats.gearRatios[_shifter.GetActualGearID()] * _carStats.finalDrive + _carStats.minRPM;
         }
     }
 }

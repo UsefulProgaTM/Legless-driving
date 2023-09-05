@@ -10,6 +10,7 @@ namespace LeglessDriving
         public AudioClip gearShiftSound;
         public AudioClip gearNeutralSound;
         public AudioClip gearMissedSound;
+        public AudioClip buttonClickSound;
         public AudioClip handbrakePulledSound;
         public AudioClip handbrakeReleaseSound;
     }

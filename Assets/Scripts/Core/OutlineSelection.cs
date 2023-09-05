@@ -13,6 +13,7 @@ public class OutlineSelection : MonoBehaviour, ISelectable
     private float targetThickness = 0f;
     private float currentThickness = 0f;
     private float defaultThickness = 0f;
+    [SerializeField]
     private float selectedThickness = 0.001f;
 
     private void Awake()

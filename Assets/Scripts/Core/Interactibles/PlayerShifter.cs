@@ -111,12 +111,19 @@ namespace LeglessDriving
             }
         }
 
-        public int GetGearPositionID()
+        public int GetActualGearID()
         {
             if (lastGearID < 0)
                 return 0;
 
             return lastGearID;
+        }
+
+        public int GetCurrentGearID()
+        {
+            if (currentGearId < 0)
+                return 1;
+            return currentGearId;
         }
 
         //public int GetCurrentGearEngaged()

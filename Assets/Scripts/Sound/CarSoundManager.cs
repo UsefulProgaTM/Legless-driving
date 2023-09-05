@@ -36,5 +36,10 @@ namespace LeglessDriving
         {
             _audioSource.PlayOneShot(_interiorSoundSO.handbrakeReleaseSound);
         }
+
+        public void PlayButtonClickSound()
+        {
+            _audioSource.PlayOneShot(_interiorSoundSO.buttonClickSound);
+        }
     }
 }

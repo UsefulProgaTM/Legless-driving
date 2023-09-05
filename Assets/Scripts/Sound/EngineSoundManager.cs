@@ -65,7 +65,6 @@ namespace LeglessDriving
 
         public void ManageEngineSound()
         {
-            Debug.Log(Time.time);
             lastRPMPercent = rpmPercent;
 
             rpmPercent = _currentCarStats.rpm / _carStats.maxRPM - _carStats.minRPM / _carStats.maxRPM;

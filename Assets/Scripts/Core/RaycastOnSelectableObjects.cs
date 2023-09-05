@@ -19,11 +19,12 @@ public class RaycastOnSelectableObjects : MonoBehaviour, IRaycast
             selectableObjectTransfrorms[i] = temp[i].transform;
         }
 
-        rayDestination = Utility.GetCenteredScreenPosition();
     }
 
     private void FixedUpdate()
     {
+        rayDestination = Utility.GetCenteredScreenPosition();
+
         _selected = null;
         var ray = Camera.main.ScreenPointToRay(rayDestination);
 

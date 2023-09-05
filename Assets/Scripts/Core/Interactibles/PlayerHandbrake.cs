@@ -11,6 +11,9 @@ namespace LeglessDriving
         [Inject]
         private CarSoundManager _soundManager;
 
+        [Inject]
+        private CurrentCarStats _currentCarStats;
+
         private Vector3 _startRotation;
         private Vector3 _endRotation;
 
@@ -70,6 +73,7 @@ namespace LeglessDriving
         public void Interact()
         {
             _lifted = !_lifted;
+            _currentCarStats.handbrakePulled = _lifted;
 
             if (_lifted)
                 _soundManager.PlayHandbrakePulledSound();
@@ -99,8 +103,7 @@ namespace LeglessDriving
                 _targetStiffness = _defaultStiffness;
             }
 
-            _wheelFrictionCurve.extremumSlip = Mathf.SmoothDamp(_wheelColliders[0].sidewaysFriction.extremumSlip, _targetSlip, ref _smDampVelocity, _smDampTime);
-            _wheelFrictionCurve.asymptoteSlip = Mathf.SmoothDamp(_wheelColliders[0].sidewaysFriction.asymptoteSlip, _targetSlip, ref _smDampVelocity, _smDampTime);
+            _wheelFrictionCurve.asymptoteSlip = _wheelFrictionCurve.extremumSlip = Mathf.SmoothDamp(_wheelColliders[0].sidewaysFriction.extremumSlip, _targetSlip, ref _smDampVelocity, _smDampTime);
             _wheelFrictionCurve.stiffness = Mathf.SmoothDamp(_wheelColliders[0].sidewaysFriction.stiffness, _targetStiffness, ref _smDampVelocity, _smDampTime);
 
             _wheelColliders[0].sidewaysFriction =
